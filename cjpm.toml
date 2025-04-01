@@ -1,0 +1,14 @@
+[dependencies]
+
+[package]
+  cjc-version = "0.59.6"
+  compile-option = ""
+  description = ""
+  link-option = ""
+  name = "msgpack4cj"
+  output-type = "dynamic"
+  override-compile-option = ""
+  src-dir = ""
+  target-dir = ""
+  version = "1.0.0"
+  [package.package-configuration]

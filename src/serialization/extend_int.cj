@@ -1,0 +1,21 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
+ */
+package msgpack4cj.serialization
+
+import msgpack4cj.core.*
+import serialization.serialization.DataModelInt
+
+extend DataModelInt {
+
+    @OverflowWrapping
+    protected func pack(packer: MessagePacker): Unit {
+        packer.packInt(this.getValue())
+    }
+
+    @OverflowWrapping
+    protected static func unpack(unpacker: MessageUnpacker): DataModelInt {
+        return DataModelInt(unpacker.unpackInt())
+    }
+
+}
