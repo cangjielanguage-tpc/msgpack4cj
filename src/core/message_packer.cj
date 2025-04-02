@@ -7,6 +7,7 @@ import std.io.ByteBuffer
 import std.io.readToEnd
 import std.binary.BigEndianOrder
 import std.collection.ArrayList
+import std.time.*
 
 public class MessagePacker {
 
@@ -246,6 +247,60 @@ public class MessagePacker {
         }
         pack(flag)
         pack(sizeArray)
+    }
+
+    @OverflowWrapping
+    public func packTimestamp(dateTime: DateTime): Unit {
+        packTimestamp(dateTime.toUnixTimeStamp().toSeconds(), dateTime.nanosecond)
+    }
+
+    @OverflowWrapping
+    public func packTimestamp(sec: Int64, nsec: Int64): Unit {
+        if (sec >> 34 == 0) {
+            var data64: Int64 = (nsec << 34) | sec
+            if ((data64 & -4294967296) == 0) {
+                writeTimestamp32(Int32(sec))
+            } else {
+                writeTimestamp64(data64)
+            }
+
+        } else {
+            writeTimestamp96(sec, Int32(nsec))
+        }
+    }
+
+    private func writeTimestamp32(sec: Int32): Unit {
+        pack(FIXEXT4)
+        pack(EXT_TIMESTAMP)
+
+        var dataArray: Array<Byte> = Array<Byte>(4, repeat: 0u8)
+        UInt32(sec).writeBigEndian(dataArray)
+        pack(dataArray)
+    }
+
+    @OverflowWrapping
+    private func writeTimestamp64(data64: Int64): Unit {
+        pack(FIXEXT8)
+        pack(EXT_TIMESTAMP)
+
+        var dataArray: Array<Byte> = Array<Byte>(8, repeat: 0u8)
+        UInt64(data64).writeBigEndian(dataArray)
+        pack(dataArray)
+    }
+
+    @OverflowWrapping
+    private func writeTimestamp96(sec: Int64, nsec: Int32): Unit {
+        pack(EXT8)
+        pack(12)
+        pack(EXT_TIMESTAMP)
+
+        var dataArray: Array<Byte> = Array<Byte>(4, repeat: 0u8)
+        UInt32(nsec).writeBigEndian(dataArray)
+        pack(dataArray)
+
+        var dataArrayInt64: Array<Byte> = Array<Byte>(8, repeat: 0u8)
+        UInt64(sec).writeBigEndian(dataArrayInt64)
+        pack(dataArrayInt64)
     }
 
     public func packBinary(value: Array<Byte>): Unit {

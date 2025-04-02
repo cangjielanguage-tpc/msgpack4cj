@@ -12,6 +12,7 @@ import std.io.ByteBuffer
 import std.io.readToEnd
 import std.binary.BigEndianOrder
 import std.collection.ArrayList
+import std.time.*
 
 @Test
 public class MessageTestInt {
@@ -30,12 +31,12 @@ public class MessageTestInt {
         let Int8Array2 = packer2.toByteArray() // [254]
         let Int8Array3 = packer3.toByteArray() // [0]
 
-        let Expect1: Array<UInt8> = [208, 129]
-        let Expect2: Array<UInt8> = [254]
-        let Expect3: Array<UInt8> = [0]
-        @Expect(Int8Array1, Expect1)
-        @Expect(Int8Array2, Expect2)
-        @Expect(Int8Array3, Expect3)
+        let Assert1: Array<UInt8> = [208, 129]
+        let Assert2: Array<UInt8> = [254]
+        let Assert3: Array<UInt8> = [0]
+        @Assert(Int8Array1, Assert1)
+        @Assert(Int8Array2, Assert2)
+        @Assert(Int8Array3, Assert3)
     }
 
     @TestCase
@@ -57,9 +58,9 @@ public class MessageTestInt {
         let Int32Array = packer3.toByteArray() // [210, 255, 255, 127, 255]
         let IntArray = packer4.toByteArray() //[208, 129, 209, 255, 126, 210, 255, 255, 127, 255]
 
-        @Expect(Int8Array, IntArray[0..2])
-        @Expect(Int16Array, IntArray[2..5])
-        @Expect(Int32Array, IntArray[5..])
+        @Assert(Int8Array, IntArray[0..2])
+        @Assert(Int16Array, IntArray[2..5])
+        @Assert(Int32Array, IntArray[5..])
     }
 
 
@@ -75,13 +76,4 @@ public class MessageTestInt {
         println(dataArray)
 
     }
-
-    @OverflowWrapping
-    @TestCase
-    public func testTT(): Unit {
-        println("ssss")
-        println("曲".size)
-
-    }
-
 }
