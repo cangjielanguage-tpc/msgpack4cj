@@ -18,7 +18,7 @@ public class MessageTest {
         var packer = MessagePacker()
         packer.packBool(value)
         var unpacker = MessageUnpacker(packer.toByteArray())
-        @Expect(unpacker.unpackBool(), value)
+        @Assert(unpacker.unpackBool(), value)
     }
 
     @TestCase
@@ -37,7 +37,7 @@ public class MessageTest {
         var packer = MessagePacker()
         packer.packString(value)
         var unpacker = MessageUnpacker(packer.toByteArray())
-        @Expect(unpacker.unpackString(), value)
+        @Assert(unpacker.unpackString(), value)
     }
 
     @TestCase[
@@ -55,7 +55,7 @@ public class MessageTest {
         var packer = MessagePacker()
         packer.packInt(value)
         var unpacker = MessageUnpacker(packer.toByteArray())
-        @Expect(unpacker.unpackInt(), value)
+        @Assert(unpacker.unpackInt(), value)
     }    
 
     @TestCase[
@@ -72,7 +72,7 @@ public class MessageTest {
         var packer = MessagePacker()
         packer.packInt(Int64(value))
         var unpacker = MessageUnpacker(packer.toByteArray())
-        @Expect(UInt64(unpacker.unpackInt()), value)
+        @Assert(UInt64(unpacker.unpackInt()), value)
     }
 
     @TestCase[
@@ -82,7 +82,7 @@ public class MessageTest {
         var packer = MessagePacker()
         packer.packFloat64(value)
         var unpacker = MessageUnpacker(packer.toByteArray())
-        @Expect(unpacker.unpackFloat64(), value)
+        @Assert(unpacker.unpackFloat64(), value)
     }
 
 
@@ -93,7 +93,7 @@ public class MessageTest {
         var packer = MessagePacker()
         packer.packArrayHeader(value)
         var unpacker = MessageUnpacker(packer.toByteArray())
-        @Expect(unpacker.unpackArrayHeader(), value)
+        @Assert(unpacker.unpackArrayHeader(), value)
     }
 
 
@@ -104,7 +104,7 @@ public class MessageTest {
         var packer = MessagePacker()
         packer.packMapHeader(value)
         var unpacker = MessageUnpacker(packer.toByteArray())
-        @Expect(unpacker.unpackMapHeader(), value)
+        @Assert(unpacker.unpackMapHeader(), value)
     }
  
 
@@ -115,7 +115,7 @@ public class MessageTest {
         var packer = MessagePacker()
         packer.packBinary(value)
         var unpacker = MessageUnpacker(packer.toByteArray())
-        @Expect(unpacker.unpackBinary(), value)
+        @Assert(unpacker.unpackBinary(), value)
     }
 
     @TestCase
