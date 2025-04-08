@@ -37,6 +37,16 @@ public class MessageTestInt {
         @Assert(Int8Array1, Assert1)
         @Assert(Int8Array2, Assert2)
         @Assert(Int8Array3, Assert3)
+
+        var unpacker1 = MessageUnpacker(Int8Array1)
+        var unpacker2 = MessageUnpacker(Int8Array2)
+        var unpacker3 = MessageUnpacker(Int8Array3)
+        let value1: Int8 = unpacker1.unpackInt8()
+        let value2: Int8 = unpacker2.unpackInt8()
+        let value3: Int8 = unpacker3.unpackInt8()
+        @Assert(value1, -127)
+        @Assert(value2, -2)
+        @Assert(value3, 0)
     }
 
     @TestCase
@@ -61,6 +71,27 @@ public class MessageTestInt {
         @Assert(Int8Array, IntArray[0..2])
         @Assert(Int16Array, IntArray[2..5])
         @Assert(Int32Array, IntArray[5..])
+
+        var unpacker1 = MessageUnpacker(Int8Array)
+        var unpacker2 = MessageUnpacker(Int16Array)
+        var unpacker3 = MessageUnpacker(Int32Array)
+        var unpacker4 = MessageUnpacker(IntArray)
+
+        let value1: Int8 = unpacker1.unpackInt8()
+        let value2: Int16 = unpacker2.unpackInt16()
+        let value3: Int32 = unpacker3.unpackInt32()
+
+        let value4: Int = unpacker4.unpackInt64()
+        let value5: Int = unpacker4.unpackInt64()
+        let value6: Int = unpacker4.unpackInt64()
+
+        @Assert(value1, -127)
+        @Assert(value2, -130)
+        @Assert(value3, -32769)
+        @Assert(value4, -127)
+        @Assert(value5, -130)
+        @Assert(value6, -32769)
+
     }
 
 
