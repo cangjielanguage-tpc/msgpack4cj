@@ -3,16 +3,18 @@
  */
 package msgpack4cj.core
 
-import std.io.ByteBuffer
-import std.io.readToEnd
+import std.io.OutputStream
 import std.binary.BigEndianOrder
 import std.collection.ArrayList
 import std.time.*
 
 public class MessagePacker {
 
-    private let buffer: ByteBuffer = ByteBuffer()
+    private let output: OutputStream
 
+    public init(output: OutputStream) {
+        this.output = output
+    }
 
     @OverflowWrapping
     public func packInt(v: Int): Unit {
@@ -327,17 +329,14 @@ public class MessagePacker {
     }
 
     private func pack(byte: Byte): Unit {
-        buffer.writeByte(byte)
+        output.write(byte)
     }
 
     private func pack(bytes: Array<Byte>): Unit {
         if(bytes.size == 0) {
             return 
         }
-        buffer.write(bytes)
+        output.write(bytes)
     }
 
-    public func toByteArray(): Array<Byte> {
-        return readToEnd(buffer)
-    }
 }

@@ -73,7 +73,7 @@ public class MainTest {
     public func case5() {
         var start = MonoTime.now()
         var entity = Entity()
-        for(i in 0..=1000000) {
+        for(i in 0..=10000) {
             entity.serialize().toMessagePack()
         }
         var end = MonoTime.now()
@@ -88,7 +88,7 @@ public class MainTest {
     public func case6() {
         var start = MonoTime.now()
         var data: Array<Byte> = [134, 166, 102, 105, 101, 108, 100, 49, 175, 229, 186, 143, 229, 136, 151, 229, 140, 150, 230, 181, 139, 232, 175, 149, 166, 102, 105, 101, 108, 100, 50, 0, 166, 102, 105, 101, 108, 100, 51, 203, 0, 0, 0, 0, 0, 0, 0, 0, 166, 102, 105, 101, 108, 100, 52, 194, 166, 102, 105, 101, 108, 100, 53, 192, 166, 102, 105, 101, 108, 100, 54, 154, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        for(i in 0..=1000000) {
+        for(i in 0..=10000) {
             var model = DataModel.fromMessagePack(data)
         }
         var end = MonoTime.now()

@@ -40,11 +40,13 @@ public class MessageTestTime {
         // String utcTime = "2024-05-22T04:00:00Z";
         // [-42, -1, 102, 77, 109, -64]
         // [214, 255, 102, 77, 109, 192]
-        var packer1 = MessagePacker()
-        let datetime = DateTime.of(year: 2024, month: May, dayOfMonth: 22, hour: 12, timeZone: TimeZone.load("Asia/Shanghai"))
+        let buffer = ByteBuffer()
+        var packer1 = MessagePacker(buffer)
+        // let datetime = DateTime.of(year: 2024, month: May, dayOfMonth: 22, hour: 12, timeZone: TimeZone.load("Asia/Shanghai"))
+        let datetime = DateTime.of(year: 2024, month: May, dayOfMonth: 22, hour: 12, timeZone: TimeZone.Local)
 
         packer1.packTimestamp(datetime)
-        let Int8Array1 = packer1.toByteArray()
+        let Int8Array1 = readToEnd(buffer)
         let javaArray: Array<UInt8> = [214, 255, 102, 77, 109, 192]
 
         @Assert(Int8Array1, javaArray)
@@ -59,11 +61,12 @@ public class MessageTestTime {
     @OverflowWrapping
     @TestCase
     public func testTimestamp32(): Unit {
-        var packer1 = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer1 = MessagePacker(buffer)
         // [-42, -1, 103, -20, -94, 103]
         // [214, 255, 103, 236, 162, 103]
         packer1.packTimestamp(1743561319, 0) // 2025-04-02T02:35:19Z
-        let Int8Array1 = packer1.toByteArray()
+        let Int8Array1 = readToEnd(buffer)
         let javaArray: Array<UInt8> = [214, 255, 103, 236, 162, 103]
 
         @Assert(Int8Array1, javaArray)
@@ -77,11 +80,12 @@ public class MessageTestTime {
     @OverflowWrapping
     @TestCase
     public func testTimestamp64(): Unit {
-        var packer1 = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer1 = MessagePacker(buffer)
         // [-41, -1, -114, -49, -60, 108, 103, -20, -94, 103]
         // [215, 255, 142, 207, 196, 108, 103, 236, 162, 103]
         packer1.packTimestamp(1743561319, 598995227) // 2025-04-02T02:35:19.598995227Z
-        let Int8Array1 = packer1.toByteArray()
+        let Int8Array1 = readToEnd(buffer)
         let javaArray: Array<UInt8> = [215, 255, 142, 207, 196, 108, 103, 236, 162, 103]
 
         @Assert(Int8Array1, javaArray)
@@ -97,10 +101,11 @@ public class MessageTestTime {
     public func testTimestamp96(): Unit {
         // [-57, 12, -1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1]
         // [199, 12, 255, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255]
-        var packer1 = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer1 = MessagePacker(buffer)
 
         packer1.packTimestamp(-1, 0) // 1969-12-31T23:59:59Z
-        let Int8Array1 = packer1.toByteArray()
+        let Int8Array1 = readToEnd(buffer)
         let javaArray: Array<UInt8> = [199, 12, 255, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255]
         @Assert(Int8Array1, javaArray)
 

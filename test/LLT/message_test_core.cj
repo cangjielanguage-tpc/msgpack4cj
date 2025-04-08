@@ -1,6 +1,7 @@
 // EXEC: cjc %import-path %L %l %f --test
 // EXEC: ./main
 
+import std.io.ByteBuffer
 import std.time.MonoTime
 import std.unittest.*
 import std.unittest.testmacro.*
@@ -15,17 +16,19 @@ public class MessageTest {
         value in [true, false]
     ]
     public func testBool(value: Bool): Unit {
-        var packer = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer = MessagePacker(buffer)
         packer.packBool(value)
-        var unpacker = MessageUnpacker(packer.toByteArray())
+        var unpacker = MessageUnpacker(buffer)
         @Assert(unpacker.unpackBool(), value)
     }
 
     @TestCase
     public func testNull(): Unit {
-        var packer = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer = MessagePacker(buffer)
         packer.packNull()
-        var unpacker = MessageUnpacker(packer.toByteArray())
+        var unpacker = MessageUnpacker(buffer)
         unpacker.unpackNull()
     }
 
@@ -33,10 +36,10 @@ public class MessageTest {
         value in random()
     ]
     public func testString(value: String): Unit {
-        println(value)
-        var packer = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer = MessagePacker(buffer)
         packer.packString(value)
-        var unpacker = MessageUnpacker(packer.toByteArray())
+        var unpacker = MessageUnpacker(buffer)
         @Assert(unpacker.unpackString(), value)
     }
 
@@ -49,12 +52,12 @@ public class MessageTest {
             -2147483649i64, -21474883648i64, -9223372036854775808i64
         ]
     ]
-
     @OverflowWrapping
     public func testInt(value: Int64): Unit {
-        var packer = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer = MessagePacker(buffer)
         packer.packInt(value)
-        var unpacker = MessageUnpacker(packer.toByteArray())
+        var unpacker = MessageUnpacker(buffer)
         @Assert(unpacker.unpackInt(), value)
     }    
 
@@ -69,9 +72,10 @@ public class MessageTest {
     ]
     @OverflowWrapping
     public func testUInt(value: UInt64): Unit {
-        var packer = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer = MessagePacker(buffer)
         packer.packInt(Int64(value))
-        var unpacker = MessageUnpacker(packer.toByteArray())
+        var unpacker = MessageUnpacker(buffer)
         @Assert(UInt64(unpacker.unpackInt()), value)
     }
 
@@ -79,9 +83,10 @@ public class MessageTest {
         value in [0.00f64, 1223.56f64, -78895.9090f64]
     ]
     public func testFloat64(value: Float64): Unit {
-        var packer = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer = MessagePacker(buffer)
         packer.packFloat64(value)
-        var unpacker = MessageUnpacker(packer.toByteArray())
+        var unpacker = MessageUnpacker(buffer)
         @Assert(unpacker.unpackFloat64(), value)
     }
 
@@ -90,9 +95,10 @@ public class MessageTest {
         value in [0, 10, 16 , 3000, 65535, 67535]
     ]
     public func testArray(value: Int): Unit {
-        var packer = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer = MessagePacker(buffer)
         packer.packArrayHeader(value)
-        var unpacker = MessageUnpacker(packer.toByteArray())
+        var unpacker = MessageUnpacker(buffer)
         @Assert(unpacker.unpackArrayHeader(), value)
     }
 
@@ -101,9 +107,10 @@ public class MessageTest {
         value in [0, 10, 16 , 3000, 65535, 67535]
     ]
     public func testStruct(value: Int64): Unit {
-        var packer = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer = MessagePacker(buffer)
         packer.packMapHeader(value)
-        var unpacker = MessageUnpacker(packer.toByteArray())
+        var unpacker = MessageUnpacker(buffer)
         @Assert(unpacker.unpackMapHeader(), value)
     }
  
@@ -112,9 +119,10 @@ public class MessageTest {
         value in random()
     ]
     public func testBinary(value: Array<Byte>): Unit {
-        var packer = MessagePacker()
+        let buffer = ByteBuffer()
+        var packer = MessagePacker(buffer)
         packer.packBinary(value)
-        var unpacker = MessageUnpacker(packer.toByteArray())
+        var unpacker = MessageUnpacker(buffer)
         @Assert(unpacker.unpackBinary(), value)
     }
 
@@ -122,8 +130,9 @@ public class MessageTest {
     public func speedTest() {
         var start = MonoTime.now()
         var entity = Entity()
+        let buffer = ByteBuffer()
+        var packer = MessagePacker(buffer)
         for(i in 0..1000000) {
-            var packer = MessagePacker()
             packer.packMapHeader(6)
             packer.packString("field1")
             packer.packString(entity.field1)
@@ -140,8 +149,6 @@ public class MessageTest {
             for(b in entity.field6) {
                 packer.packInt(Int64(b));
             }
-            packer.toByteArray()
-            ///println(packer.toByteArray().size)
         }
         var end = MonoTime.now()
         var cost = end - start
@@ -166,6 +173,7 @@ class Entity {
     public var field6: Array<Byte> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 }
+
 
 
 

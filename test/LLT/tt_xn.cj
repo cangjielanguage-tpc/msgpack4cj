@@ -1,25 +1,12 @@
-
+// EXEC: cjc %import-path %L %l %f --test
+// EXEC: ./main
 
 import std.unittest.*
 import std.unittest.testmacro.*
 import msgpack4cj.core.*
 import std.time.MonoTime
-
-
-
-main() {    
-    let uuidTest = UUIDTest()
-    uuidTest.testString()
-    uuidTest.testBool()
-    uuidTest.testByte()
-    uuidTest.testByteArray()
-    uuidTest.testInt64()
-    uuidTest.testFloat32()
-    uuidTest.testFloat64()
-    uuidTest.testNull()
-    uuidTest.testMapHeader()
-    uuidTest.testArrayHeader()
-}
+import std.io.ByteBuffer
+import std.io.readToEnd
 
 @Test
 public class UUIDTest {
@@ -35,12 +22,13 @@ public class UUIDTest {
         var totalTime2: Int64 = 0
 
         for (i in 0..counts) {
-            var packer = MessagePacker()
+            let buffer = ByteBuffer()
+            var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
             packer.packString(targetString)
         
-            let packerArray = packer.toByteArray()
+            let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 
             let startTime2 = MonoTime.now()
@@ -64,11 +52,12 @@ public class UUIDTest {
         var totalTime2: Int64 = 0
 
         for (i in 0..counts) {
-            var packer = MessagePacker()
+            let buffer = ByteBuffer()
+            var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
             packer.packBool(true)
-            let packerArray = packer.toByteArray()
+            let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 
             let startTime2 = MonoTime.now()
@@ -92,11 +81,12 @@ public class UUIDTest {
         var totalTime2: Int64 = 0
 
         for (i in 0..counts) {
-            var packer = MessagePacker()
+            let buffer = ByteBuffer()
+            var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
             packer.packBinary(98)
-            let packerArray = packer.toByteArray()
+            let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 
             let startTime2 = MonoTime.now()
@@ -120,11 +110,12 @@ public class UUIDTest {
         var totalTime2: Int64 = 0
 
         for (i in 0..counts) {
-            var packer = MessagePacker()
+            let buffer = ByteBuffer()
+            var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
             packer.packBinary([1, 2, 3, 4, 5, 6, 7, 8, 9, 0])
-            let packerArray = packer.toByteArray()
+            let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 
             let startTime2 = MonoTime.now()
@@ -148,11 +139,12 @@ public class UUIDTest {
         var totalTime2: Int64 = 0
 
         for (i in 0..counts) {
-            var packer = MessagePacker()
+            let buffer = ByteBuffer()
+            var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
             packer.packInt(128)
-            let packerArray = packer.toByteArray()
+            let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 
             let startTime2 = MonoTime.now()
@@ -176,11 +168,12 @@ public class UUIDTest {
         var totalTime2: Int64 = 0
 
         for (i in 0..counts) {
-            var packer = MessagePacker()
+            let buffer = ByteBuffer()
+            var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
             packer.packFloat32(128.0)
-            let packerArray = packer.toByteArray()
+            let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 
             let startTime2 = MonoTime.now()
@@ -204,11 +197,12 @@ public class UUIDTest {
         var totalTime2: Int64 = 0
 
         for (i in 0..counts) {
-            var packer = MessagePacker()
+            let buffer = ByteBuffer()
+            var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
             packer.packFloat64(256.0)
-            let packerArray = packer.toByteArray()
+            let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 
             let startTime2 = MonoTime.now()
@@ -232,11 +226,12 @@ public class UUIDTest {
         var totalTime2: Int64 = 0
 
         for (i in 0..counts) {
-            var packer = MessagePacker()
+            let buffer = ByteBuffer()
+            var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
             packer.packNull()
-            let packerArray = packer.toByteArray()
+            let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 
             let startTime2 = MonoTime.now()
@@ -261,11 +256,12 @@ public class UUIDTest {
         var totalTime2: Int64 = 0
 
         for (i in 0..counts) {
-            var packer = MessagePacker()
+            let buffer = ByteBuffer()
+            var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
             packer.packMapHeader(128)
-            let packerArray = packer.toByteArray()
+            let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 
             let startTime2 = MonoTime.now()
@@ -289,11 +285,12 @@ public class UUIDTest {
         var totalTime2: Int64 = 0
 
         for (i in 0..counts) {
-            var packer = MessagePacker()
+            let buffer = ByteBuffer()
+            var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
             packer.packArrayHeader(128)
-            let packerArray = packer.toByteArray()
+            let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 
             let startTime2 = MonoTime.now()
