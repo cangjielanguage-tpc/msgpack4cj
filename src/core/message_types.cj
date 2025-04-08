@@ -77,14 +77,14 @@ protected const BIN16: Byte = 0xC5
 
 protected const BIN32: Byte = 0xC6
 
-protected const FIXEXT1: Byte = 0xd4
-protected const FIXEXT2: Byte = 0xd5
-protected const FIXEXT4: Byte = 0xd6
-protected const FIXEXT8: Byte = 0xd7
-protected const FIXEXT16: Byte = 0xd8
+protected const FIXEXT1: Byte = 0xD4
+protected const FIXEXT2: Byte = 0xD5
+protected const FIXEXT4: Byte = 0xD6
+protected const FIXEXT8: Byte = 0xD7
+protected const FIXEXT16: Byte = 0xD8
 
 protected const EXT_TIMESTAMP: Byte = 255
 
-protected const EXT8: Byte = 0xc7
-protected const EXT16: Byte = 0xc8
-protected const EXT32: Byte = 0xc9
+protected const EXT8: Byte = 0xC7
+protected const EXT16: Byte = 0xC8
+protected const EXT32: Byte = 0xC9

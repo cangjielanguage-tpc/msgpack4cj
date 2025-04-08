@@ -3,15 +3,18 @@
  */
 package msgpack4cj.serialization
 
+import std.io.readToEnd
+import std.io.ByteBuffer
 import msgpack4cj.core.*
 import serialization.serialization.*
 
 extend DataModel <: ToMessagePack {
     
     public func toMessagePack(): Array<Byte> {
-        let packer = MessagePacker()
+        let buffer = ByteBuffer()
+        let packer = MessagePacker(buffer)
         superPack(packer)
-        return packer.toByteArray()
+        return readToEnd(buffer)
     }
 
     public static func fromMessagePack(data: Array<Byte>): DataModel {

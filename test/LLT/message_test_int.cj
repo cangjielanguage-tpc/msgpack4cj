@@ -19,17 +19,20 @@ public class MessageTestInt {
 
     @TestCase
     public func testPackInt8(): Unit {
-        var packer1 = MessagePacker()
-        var packer2 = MessagePacker()
-        var packer3 = MessagePacker()
+        let buffer1 = ByteBuffer()
+        let buffer2 = ByteBuffer()
+        let buffer3 = ByteBuffer()
+        var packer1 = MessagePacker(buffer1)
+        var packer2 = MessagePacker(buffer2)
+        var packer3 = MessagePacker(buffer3)
         
         packer1.packInt8(-127)
         packer2.packInt8(-2) 
         packer3.packInt8(0)
 
-        let Int8Array1 = packer1.toByteArray() // [208, 129]
-        let Int8Array2 = packer2.toByteArray() // [254]
-        let Int8Array3 = packer3.toByteArray() // [0]
+        let Int8Array1 = readToEnd(buffer1) // [208, 129]
+        let Int8Array2 = readToEnd(buffer2) // [254]
+        let Int8Array3 = readToEnd(buffer3) // [0]
 
         let Assert1: Array<UInt8> = [208, 129]
         let Assert2: Array<UInt8> = [254]
@@ -51,10 +54,14 @@ public class MessageTestInt {
 
     @TestCase
     public func testPackInt8_Int16_Int32(): Unit {
-        var packer4 = MessagePacker()
-        var packer1 = MessagePacker()
-        var packer2 = MessagePacker()
-        var packer3 = MessagePacker()
+        let buffer1 = ByteBuffer()
+        let buffer2 = ByteBuffer()
+        let buffer3 = ByteBuffer()
+        let buffer4 = ByteBuffer()
+        var packer1 = MessagePacker(buffer1)
+        var packer2 = MessagePacker(buffer2)
+        var packer3 = MessagePacker(buffer3)
+        var packer4 = MessagePacker(buffer4)
         packer1.packInt8(-127)
         packer2.packInt16(-130) // Int16 (-32,768 - 32,767)
         packer3.packInt32(-32769)
@@ -63,10 +70,10 @@ public class MessageTestInt {
         packer4.packInt(-130)
         packer4.packInt(-32769)
 
-        let Int8Array = packer1.toByteArray() // [208, 129]
-        let Int16Array = packer2.toByteArray() // [209, 255, 126]
-        let Int32Array = packer3.toByteArray() // [210, 255, 255, 127, 255]
-        let IntArray = packer4.toByteArray() //[208, 129, 209, 255, 126, 210, 255, 255, 127, 255]
+        let Int8Array = readToEnd(buffer1) // [208, 129]
+        let Int16Array = readToEnd(buffer2) // [209, 255, 126]
+        let Int32Array = readToEnd(buffer3) // [210, 255, 255, 127, 255]
+        let IntArray = readToEnd(buffer4) //[208, 129, 209, 255, 126, 210, 255, 255, 127, 255]
 
         @Assert(Int8Array, IntArray[0..2])
         @Assert(Int16Array, IntArray[2..5])
