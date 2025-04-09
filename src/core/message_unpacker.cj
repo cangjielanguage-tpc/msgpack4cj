@@ -38,60 +38,6 @@ public class MessageUnpacker {
         throw IllegalArgumentException("this is not bool flag")
     }
 
-    @OverflowWrapping
-    public func unpackInt(): Int {
-        let flag = current ?? nextFlag()
-        current = None
-        if (flag >= POSITIVE_FIXINT_MIN && flag <= POSITIVE_FIXINT_MAX) {
-            return Int64(flag)
-        }
-        if (flag >= NEGATIVE_FIXINT_MIN && flag <= NEGATIVE_FIXINT_MAX) {
-            return Int64(Int8(flag))
-        }
-        //int8
-        if (flag == INT8) {
-            let uint8 = readByte()
-            return Int64(Int8(uint8))
-        }
-        //int16
-        if (flag == INT16) {
-            let slice = readBytes(2)
-            return Int64(Int16.readBigEndian(slice))
-        }
-        //int32
-        if (flag == INT32) {
-            let slice = readBytes(4)
-            return Int64(Int32.readBigEndian(slice))
-        }
-        //int64
-        if (flag == INT64) {
-            let slice = readBytes(8)
-            return Int64.readBigEndian(slice)
-        }
-
-        //uint8
-        if (flag == UINT8) {
-            let uint8 = readByte()
-            return Int64(uint8)
-        }
-        //uint16
-        if (flag == UINT16) {
-            let slice = readBytes(2)
-            return Int64(UInt16.readBigEndian(slice))
-        }
-        //uint32
-        if (flag == UINT32) {
-            let slice = readBytes(4)
-            return Int64(UInt32.readBigEndian(slice))
-        }
-        //uint64
-        if (flag == UINT64) {
-            let slice = readBytes(8)
-            return Int64(UInt64.readBigEndian(slice))
-        }
-        throw IllegalArgumentException("this is not int flag")
-    }
-
     public func unpackNull(): Unit {
         let flag = current ?? nextFlag()
         current = None
@@ -171,225 +117,64 @@ public class MessageUnpacker {
         return size
     }
 
-    @OverflowWrapping
     public func unpackInt8(): Int8 {
-        let flag = current ?? nextFlag()
-        current = None
-        if (flag <= 0x7f || flag >= 0xe0) {
-            return Int8(flag)
-        }
-        match (flag) {
-            case 0XCC =>
-                let int8 = Int8(readByte()) // UINT8
-                if (int8 < 0) {
-                    throw overflowU8(UInt8(int8))
-                }
-                return int8
-            case 0XCD =>
-                let slice = readBytes(2) // UINT16
-                let int16 = Int16.readBigEndian(slice)
-                if (int16 < 0 || int16 > Int16(Int8.Max)) {
-                    throw overflowU16(UInt16(int16))
-                }
-                return Int8(int16)
-            case 0XCE =>
-                let slice = readBytes(4) // UINT32
-                let int32 = Int32.readBigEndian(slice)
-                if (int32 < 0 || int32 > Int32(Int8.Max)) {
-                    throw overflowU32(UInt32(int32))
-                }
-                return Int8(int32)
-            case 0XCF =>
-                let slice = readBytes(8) // UINT64
-                let int64 = Int64.readBigEndian(slice)
-                if (int64 < 0 || int64 > Int64(Int8.Max)) {
-                    throw overflowU64(UInt64(int64))
-                }
-                return Int8(int64)
-            case 0XD0 => 
-                return Int8(readByte()) // Int8
-            case 0XD1 =>
-                let slice = readBytes(2) // INT16
-                let i16 = Int16.readBigEndian(slice)
-                if (i16 < Int16(Int8.Min) || i16 > Int16(Int8.Max)) {
-                    throw overflowI16(i16)
-                }
-                return Int8(i16)
-            case 0XD2 =>
-                let slice = readBytes(4) // Int32
-                let i32 = Int32.readBigEndian(slice)
-                if (i32 < Int32(Int8.Min) || i32 > Int32(Int8.Max)) {
-                    throw overflowI32(i32)
-                }
-                return Int8(i32)
-            case 0XD3 =>
-                let slice = readBytes(8) // Int64
-                let i64 = Int64.readBigEndian(slice)
-                if (i64 < Int64(Int8.Min) || i64 > Int64(Int8.Max)) {
-                    throw overflowI64(i64)
-                }
-                return Int8(i64)
-            case _ => throw unexpected("Integer", flag)
+        let i64 = unpackInt64()
+        try {
+            return Int8(i64)
+        }catch (e: OverflowException) {
+            throw MessageIntegerOverflowException(i64)
         }
     }
 
-    @OverflowWrapping
     public func unpackInt16(): Int16 {
-        let flag = current ?? nextFlag()
-        current = None
-        if (flag <= 0x7f || flag >= 0xe0) {
-            return Int16(flag)
+        let i64 = unpackInt64()
+        try {
+            return Int16(i64)
+        }catch (e: OverflowException) {
+            throw MessageIntegerOverflowException(i64)
         }
-        match (flag) {
-            case 0xCC =>
-                let int8 = Int8(readByte()) // UINT8
-                return Int16(UInt8(int8))
-            case 0xCD =>
-                let slice = readBytes(2) // UINT16
-                let int16 = Int16.readBigEndian(slice)
-                if (int16 < 0) {
-                    throw overflowU16(UInt16(int16))
-                }
-                return int16
-            case 0xCE =>
-                let slice = readBytes(4) // UINT32
-                let int32 = Int32.readBigEndian(slice)
-                if (int32 < 0 || int32 > Int32(Int16.Max)) {
-                    throw overflowU32(UInt32(int32))
-                }
-                return Int16(int32)
-            case 0xCF =>
-                let slice = readBytes(8) // UINT64
-                let int64 = Int64.readBigEndian(slice)
-                if (int64 < 0 || int64 > Int64(Int16.Max)) {
-                    throw overflowU64(UInt64(int64))
-                }
-                return Int16(int64)
-            case 0xD0 =>
-                let i8 = Int8(readByte()) // Int8
-                return Int16(i8)
-            case 0xD1 =>
-                let slice = readBytes(2) // INT16
-                let i16 = Int16.readBigEndian(slice)
-                return i16
-            case 0xD2 =>
-                let slice = readBytes(4) // Int32
-                let i32 = Int32.readBigEndian(slice)
-                if (i32 < Int32(Int16.Min) || i32 > Int32(Int16.Max)) {
-                    throw overflowI32(i32)
-                }
-                return Int16(i32)
-            case 0xD3 =>
-                let slice = readBytes(8) // Int64
-                let i64 = Int64.readBigEndian(slice)
-                if (i64 < Int64(Int16.Min) || i64 > Int64(Int16.Max)) {
-                    throw overflowI64(i64)
-                }
-                return Int16(i64)
-            case _ => throw unexpected("Integer", flag)
-        }
-        throw unexpected("Integer", flag)
     }
 
-    @OverflowWrapping
+
     public func unpackInt32(): Int32 {
-        let flag = current ?? nextFlag()
-        current = None
-        if (flag <= 0x7f || flag >= 0xe0) {
-            return Int32(flag)
+        let i64 = unpackInt64()
+        try {
+            return Int32(i64)
+        }catch (e: OverflowException) {
+            throw MessageIntegerOverflowException(i64)
         }
-        match (flag) {
-            case 0xCC =>
-                let int8 = Int8(readByte()) // UINT8
-                return Int32(UInt8(int8))
-            case 0xCD =>
-                let slice = readBytes(2) // UINT16
-                let int16 = Int16.readBigEndian(slice)
-                return Int32(UInt16(int16))
-            case 0xCE =>
-                let slice = readBytes(4) // UINT32
-                let int32 = Int32.readBigEndian(slice)
-                if (int32 < 0) {
-                    throw overflowU32(UInt32(int32))
-                }
-                return int32
-            case 0xCF =>
-                let slice = readBytes(8) // UINT64
-                let int64 = Int64.readBigEndian(slice)
-                if (int64 < 0 || int64 > Int64(Int32.Max)) {
-                    throw overflowU64(UInt64(int64))
-                }
-                return Int32(int64)
-            case 0xD0 =>
-                let i8 = Int8(readByte()) // Int8
-                return Int32(i8)
-            case 0xD1 =>
-                let slice = readBytes(2) // INT16
-                let i16 = Int16.readBigEndian(slice)
-                return Int32(i16)
-            case 0xD2 =>
-                let slice = readBytes(4) // Int32
-                let i32 = Int32.readBigEndian(slice)
-                return i32
-            case 0xD3 =>
-                let slice = readBytes(8) // Int64
-                let i64 = Int64.readBigEndian(slice)
-                if (i64 < Int64(Int32.Min) || i64 > Int64(Int32.Max)) {
-                    throw overflowI64(i64)
-                }
-                return Int32(i64)
-            case _ => throw unexpected("Integer", flag)
-        }
-        throw unexpected("Integer", flag)
     }
 
     @OverflowWrapping
     public func unpackInt64(): Int64 {
         let flag = current ?? nextFlag()
+        current = None
         if (flag <= 0x7f || flag >= 0xe0) {
-            return Int64(flag)
+            return Int64(Int8(flag))
         }
         match (flag) {
             case 0xCC =>
-                let int8 = Int8(readByte()) // UINT8
-                return Int64(UInt8(int8))
+                return Int64(readByte())  // UInt8
             case 0xCD =>
-                let slice = readBytes(2) // UINT16
-                let int16 = Int16.readBigEndian(slice)
-                return Int64(UInt16(int16))
+                return Int64(readUInt16())  // UInt16
             case 0xCE =>
-                let slice = readBytes(4) // UINT32
-                let int32 = Int32.readBigEndian(slice)
-                if (int32 < 0) {
-                    return Int64(int32 & 0x7fffffff) + 0x80000000
-                } else {
-                    return Int64(int32)
-                }
+                return Int64(readUInt32())  // UInt32
             case 0xCF =>
-                let slice = readBytes(8) // UINT64
-                let int64 = Int64.readBigEndian(slice)
-                if (int64 < 0) {
-                    throw overflowU64(UInt64(int64))
+                let i64 = readInt64()  // UInt64
+                if (i64 < 0) {
+                    throw MessageIntegerOverflowException(i64)
                 }
-                return int64
+                return Int64(64)
             case 0xD0 =>
-                let i8 = Int8(readByte()) // Int8
-                return Int64(i8)
+                return Int64(Int8(readByte()))  //Int8
             case 0xD1 =>
-                let slice = readBytes(2) // INT16
-                let i16 = Int16.readBigEndian(slice)
-                return Int64(i16)
+                return Int64(readInt16())  //Int16
             case 0xD2 =>
-                let slice = readBytes(4) // Int32
-                let i32 = Int32.readBigEndian(slice)
-                return Int64(i32)
+                return Int64(readInt32())  //Int32
             case 0xD3 =>
-                let slice = readBytes(8)// Int64
-                let i64 = Int64.readBigEndian(slice)
-                return i64
+                return readInt64()  //Int64
             case _ => throw unexpected("Integer", flag)
         }
-        throw unexpected("Integer", flag)
     }
 
     public func unpackTimestamp(): DateTime {
@@ -584,6 +369,30 @@ public class MessageUnpacker {
         return false
     }
 
+    private func readInt16(): Int16 {
+        return Int16.readBigEndian(readBytes(2))
+    }
+
+    private func readInt32(): Int32 {
+        return Int32.readBigEndian(readBytes(4))
+    }
+
+    private func readInt64(): Int64 {
+        return Int64.readBigEndian(readBytes(8))
+    }
+
+    private func readUInt16(): UInt16 {
+        return UInt16.readBigEndian(readBytes(2))
+    }
+
+    private func readUInt32(): UInt32 {
+     return UInt32.readBigEndian(readBytes(4))
+    }
+
+    private func readUInt64(): UInt64 {
+        return UInt64.readBigEndian(readBytes(8))
+    }
+
     private func readByte(): Byte {
         let temp = Array<Byte>(1, repeat: 0)
         if (input.read(temp) != 1) {
@@ -598,34 +407,6 @@ public class MessageUnpacker {
             throw IllegalMemoryException()
         }
         return temp
-    }
-
-    private static func overflowU8(u8: Byte): MessageIntegerOverflowException {
-        return MessageIntegerOverflowException(Int64(u8))
-    }
-
-    private static func overflowU16(u16: UInt16): MessageIntegerOverflowException {
-        return MessageIntegerOverflowException(Int64(u16))
-    }
-
-    private static func overflowU32(u32: UInt32): MessageIntegerOverflowException {
-        return MessageIntegerOverflowException(Int64(Int64(u32) + 0x80000000))
-    }
-
-    private static func overflowU64(u64: UInt64): MessageIntegerOverflowException {
-        return MessageIntegerOverflowException(Int64(u64))
-    }
-
-    private static func overflowI16(i16: Int16): MessageIntegerOverflowException {
-        return MessageIntegerOverflowException(Int64(i16))
-    }
-
-    private static func overflowI32(i32: Int32): MessageIntegerOverflowException {
-        return MessageIntegerOverflowException(Int64(i32))
-    }
-
-    private static func overflowI64(i64: Int64): MessageIntegerOverflowException {
-        return MessageIntegerOverflowException(i64)
     }
 
     private static func overflowU32Size(u32: Int32): MessageSizeException {

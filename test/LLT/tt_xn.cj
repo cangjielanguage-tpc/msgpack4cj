@@ -149,7 +149,7 @@ public class UUIDTest {
 
             let startTime2 = MonoTime.now()
             var unpacker = MessageUnpacker(packerArray)
-            var a = unpacker.unpackInt()
+            var a = unpacker.unpackInt64()
             let duration2 = (MonoTime.now() - startTime2).toNanoseconds()
             
             totalTime += duration

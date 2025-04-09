@@ -15,7 +15,7 @@ extend DataModelInt {
 
     @OverflowWrapping
     protected static func unpack(unpacker: MessageUnpacker): DataModelInt {
-        return DataModelInt(unpacker.unpackInt())
+        return DataModelInt(unpacker.unpackInt64())
     }
 
 }
