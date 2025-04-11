@@ -143,7 +143,7 @@ public class UUIDTest {
             var packer = MessagePacker(buffer)
 
             let startTime = MonoTime.now()
-            packer.packInt(128)
+            packer.packInt64(128)
             let packerArray = readToEnd(buffer)
             let duration = (MonoTime.now() - startTime).toNanoseconds()
 

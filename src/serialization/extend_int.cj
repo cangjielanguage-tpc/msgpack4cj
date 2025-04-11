@@ -10,7 +10,7 @@ extend DataModelInt {
 
     @OverflowWrapping
     protected func pack(packer: MessagePacker): Unit {
-        packer.packInt(this.getValue())
+        packer.packInt64(this.getValue())
     }
 
     @OverflowWrapping

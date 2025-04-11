@@ -3,6 +3,7 @@
  */
 package msgpack4cj.core
 
+import std.math.numeric.*
 import std.io.InputStream
 import std.io.ByteBuffer
 import std.binary.BigEndianOrder
@@ -117,31 +118,33 @@ public class MessageUnpacker {
         return size
     }
 
+    @OverflowThrowing
     public func unpackInt8(): Int8 {
         let i64 = unpackInt64()
         try {
             return Int8(i64)
         }catch (e: OverflowException) {
-            throw MessageIntegerOverflowException(i64)
+            throw MessageIntegerOverflowException(BigInt(i64))
         }
     }
 
+    @OverflowThrowing
     public func unpackInt16(): Int16 {
         let i64 = unpackInt64()
         try {
             return Int16(i64)
         }catch (e: OverflowException) {
-            throw MessageIntegerOverflowException(i64)
+            throw MessageIntegerOverflowException(BigInt(i64))
         }
     }
 
-
+    @OverflowThrowing
     public func unpackInt32(): Int32 {
         let i64 = unpackInt64()
         try {
             return Int32(i64)
         }catch (e: OverflowException) {
-            throw MessageIntegerOverflowException(i64)
+            throw MessageIntegerOverflowException(BigInt(i64))
         }
     }
 
@@ -162,7 +165,7 @@ public class MessageUnpacker {
             case 0xCF =>
                 let i64 = readInt64()  // UInt64
                 if (i64 < 0) {
-                    throw MessageIntegerOverflowException(i64)
+                    throw MessageIntegerOverflowException(BigInt(i64))
                 }
                 return Int64(64)
             case 0xD0 =>
@@ -173,7 +176,85 @@ public class MessageUnpacker {
                 return Int64(readInt32())  //Int32
             case 0xD3 =>
                 return readInt64()  //Int64
-            case _ => throw unexpected("Integer", flag)
+            case _ => throw MessageTypeException()
+        }
+    }
+
+    @OverflowThrowing
+    public func unpackUInt8(): UInt8 {
+        let u64 = unpackUInt64()
+        try {
+            return UInt8(u64)
+        }catch (e: OverflowException) {
+            throw MessageIntegerOverflowException(BigInt(u64))
+        }
+    }
+
+    @OverflowThrowing
+    public func unpackUInt16(): UInt16 {
+        let u64 = unpackUInt64()
+        try {
+            return UInt16(u64)
+        }catch (e: OverflowException) {
+            throw MessageIntegerOverflowException(BigInt(u64))
+        }
+    }
+
+    @OverflowThrowing
+    public func unpackUInt32(): UInt32 {
+        let u64 = unpackUInt64()
+        try {
+            return UInt32(u64)
+        }catch (e: OverflowException) {
+            throw MessageIntegerOverflowException(BigInt(u64))
+        }
+    }
+
+    @OverflowWrapping
+    public func unpackUInt64(): UInt64 {
+        let flag = current ?? nextFlag()
+        current = None
+        if (flag >= NEGATIVE_FIXINT_MIN || flag <= POSITIVE_FIXINT_MAX) {
+            let i8 = Int8(flag)
+            if(i8 < 0) {
+                throw MessageIntegerOverflowException(BigInt(i8))
+            }
+            return UInt64(i8)
+        }
+        match (flag) {
+            case 0xCC =>
+                return UInt64(readByte())  // UInt8
+            case 0xCD =>
+                return UInt64(readUInt16())  // UInt16
+            case 0xCE =>
+                return UInt64(readUInt32())  // UInt32
+            case 0xCF =>
+                return readUInt64() // UInt64
+            case 0xD0 =>
+                let i8 = readInt8() //Int8
+                if(i8 < 0) {
+                    throw MessageIntegerOverflowException(BigInt(i8))
+                }
+                return UInt64(i8)  
+            case 0xD1 =>
+                let i16 = readInt16() //Int16
+                if(i16 < 0) {
+                    throw MessageIntegerOverflowException(BigInt(i16))
+                }
+                return UInt64(i16)  
+            case 0xD2 =>
+                let i32 = readInt32()
+                if(i32 < 0) {
+                    throw MessageIntegerOverflowException(BigInt(i32))
+                }
+                return UInt64(i32)  //Int32
+            case 0xD3 =>
+                let i64 = readInt64() //Int64
+                if(i64 < 0) {
+                    throw MessageIntegerOverflowException(BigInt(i64))
+                }
+                return UInt64(i64)
+            case _ => throw MessageTypeException()
         }
     }
 
@@ -369,6 +450,10 @@ public class MessageUnpacker {
         return false
     }
 
+    private func readInt8(): Int8 {
+        return Int8.readBigEndian(readBytes(1))
+    }
+
     private func readInt16(): Int16 {
         return Int16.readBigEndian(readBytes(2))
     }
@@ -379,6 +464,10 @@ public class MessageUnpacker {
 
     private func readInt64(): Int64 {
         return Int64.readBigEndian(readBytes(8))
+    }
+
+    private func readUInt8(): UInt8 {
+        return UInt8.readBigEndian(readBytes(1))
     }
 
     private func readUInt16(): UInt16 {
