@@ -4,6 +4,7 @@
  */
 package msgpack4cj.core
 
+import std.math.numeric.BigInt
 import std.io.ByteBuffer
 import std.io.readToEnd
 import std.binary.BigEndianOrder
@@ -66,21 +67,21 @@ public open class MessageTypeException<: MessagePackException
 
 public open class MessageIntegerOverflowException<: MessageTypeException
 {
-    private var bigInteger: Int64 = 0
+    private var bigInteger: BigInt
 
-    public init(bigInteger: Int64)
+    public init(bigInteger: BigInt)
     {
         super()
         this.bigInteger = bigInteger
     }
 
-    public init(messages: String, bigInteger: Int64)
+    public init(messages: String, bigInteger: BigInt)
     {   
         super(messages)
         this.bigInteger = bigInteger
     }
 
-    public func getBigInteger(): Int64 {
+    public func getBigInteger(): BigInt {
         return bigInteger
     }
 

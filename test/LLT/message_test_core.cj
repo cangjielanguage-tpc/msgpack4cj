@@ -56,7 +56,7 @@ public class MessageTest {
     public func testInt(value: Int64): Unit {
         let buffer = ByteBuffer()
         var packer = MessagePacker(buffer)
-        packer.packInt(value)
+        packer.packInt64(value)
         var unpacker = MessageUnpacker(buffer)
         @Assert(unpacker.unpackInt64(), value)
     }    
@@ -66,17 +66,17 @@ public class MessageTest {
             0u64, 120u64, 127u64,
             128u64, 220u64, 255u64,
             256u64, 304u64, 65535u64,
-            65536u64, 655526u64, 4294967295u64//,
-            //4294967296u64, 42994967295u64, 18_446_744_073_709_551_615u64
+            65536u64, 655526u64, 4294967295u64,
+            4294967296u64, 42994967295u64//, 18_446_744_073_709_551_615u64
         ]
     ]
     @OverflowWrapping
     public func testUInt(value: UInt64): Unit {
         let buffer = ByteBuffer()
         var packer = MessagePacker(buffer)
-        packer.packInt(Int64(value))
+        packer.packInt64(Int64(value))
         var unpacker = MessageUnpacker(buffer)
-        @Assert(UInt64(unpacker.unpackInt64()), value)
+        @Assert(unpacker.unpackUInt64(), value)
     }
 
     @TestCase[
@@ -137,7 +137,7 @@ public class MessageTest {
             packer.packString("field1")
             packer.packString(entity.field1)
             packer.packString("field2")
-            packer.packInt(entity.field2)
+            packer.packInt64(entity.field2)
             packer.packString("field3")
             packer.packFloat64(entity.field3)
             packer.packString("field4")
@@ -147,7 +147,7 @@ public class MessageTest {
             packer.packString("field6")
             packer.packArrayHeader(entity.field6.size);
             for(b in entity.field6) {
-                packer.packInt(Int64(b));
+                packer.packInt64(Int64(b));
             }
         }
         var end = MonoTime.now()

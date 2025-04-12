@@ -2,7 +2,7 @@
 
 [package]
   cjc-version = "0.59.6"
-  compile-option = "--int-overflow=throwing"
+  compile-option = ""
   description = ""
   link-option = ""
   name = "msgpack4cj"
