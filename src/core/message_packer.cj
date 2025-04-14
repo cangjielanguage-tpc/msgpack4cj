@@ -16,226 +16,146 @@ public class MessagePacker {
         this.output = output
     }
 
-    @OverflowWrapping
-    public func packInt8(v: Int8): Unit {
-        if (v < -(1 << 5)) { // -32
-            pack(INT8)
-            pack(UInt8(v))
-        }
-        else {
-            pack(UInt8(v))
+    public func packInt8(value: Int8): Unit {
+        if (value < -(1 << 5)) {
+            writeInt8(value) // -32
+        } else {
+            writeFixInt(Int8(value))
         }
     }
 
-    @OverflowWrapping
-    public func packInt16(v: Int16): Unit {
-        var flag: Byte = 0x00
-        var dataArray: Array<Byte> = []
-        if (v < -(1 << 5)) {
-            if (v < -(1 << 7)) {
-                flag = INT16
-                dataArray = Array<Byte>(2, repeat: 0u8)
-                UInt16(v).writeBigEndian(dataArray)
+    public func packInt16(value: Int16): Unit {
+        if (value < -(1 << 5)) {
+            if (value < -(1 << 7)) {
+                writeInt16(value)
             } else {
-                flag = INT8
-                dataArray = [UInt8(v)]
+                writeInt8(Int8(value))
             }
         }
-        else if (v < (1 << 7)) {
-            flag = UInt8(v)
+        else if (value < (1 << 7)) {
+           writeFixInt(Int8(value))
         }
         else {
-            if (v < (1 << 8)) {
-                flag = UINT8
-                dataArray = [UInt8(v)]
+            if (value < (1 << 8)) {
+                writeUInt8(UInt8(value))
             } else {
-                flag = UINT16
-                dataArray = Array<Byte>(2, repeat: 0u8)
-                UInt16(v).writeBigEndian(dataArray)
+                writeUInt16(UInt16(value))
             }
         }
-        pack(flag)
-        pack(dataArray)
     }
 
-    @OverflowWrapping
-    public func packInt32(v: Int32): Unit {
-        var flag: Byte = 0x00
-        var dataArray: Array<Byte> = []
-        if(v < -(1 << 5)) { // -32
-            if(v < -(1 << 15)) {
-                flag = INT32
-                dataArray = Array<Byte>(4, repeat: 0u8)
-                UInt32(v).writeBigEndian(dataArray)
+    public func packInt32(value: Int32): Unit {
+        if(value < -(1 << 5)) { // -32
+            if(value < -(1 << 15)) {
+                writeInt32(value)
             }else {
-                if(v < -(1 << 7)) {
-                    flag = INT16
-                    dataArray = Array<Byte>(2, repeat: 0u8)
-                    UInt16(v).writeBigEndian(dataArray)
+                if(value < -(1 << 7)) {
+                    writeInt16(Int16(value))
                 }else {
-                    flag = INT8
-                    dataArray = [UInt8(v)]
+                    writeInt8(Int8(value))
                 }
             }
-        }else if (v < (1 << 7)) { //128
-            flag = UInt8(v)
+        }else if (value < (1 << 7)) { //128
+            writeFixInt(Int8(value))
         }else {
-            if(v < (1 << 8)) {
-                flag = UINT8
-                dataArray = [UInt8(v)]
-            }else if (v < (1 << 16)) {
-                flag = UINT16
-                dataArray = Array<Byte>(2, repeat: 0u8)
-                UInt16(v).writeBigEndian(dataArray)
-            } else  {
-                flag = UINT32
-                dataArray = Array<Byte>(4, repeat: 0u8)
-                UInt32(v).writeBigEndian(dataArray)
-            }
-        }
-        pack(flag)
-        pack(dataArray)
-    }
-
-    @OverflowWrapping
-    public func packInt64(v: Int64): Unit {
-        var flag: Byte = 0x00
-        var dataArray: Array<Byte> = []
-        if(v < -(1 << 5)) { // < -32 uint类型
-            if(v < -(1 << 15)) { 
-                if(v < -(1 << 31)) {
-                    flag = INT64
-                    dataArray = Array<Byte>(8, repeat: 0u8)
-                    UInt64(v).writeBigEndian(dataArray)
-                }else {
-                    flag = INT32
-                    dataArray = Array<Byte>(4, repeat: 0u8)
-                    UInt32(v).writeBigEndian(dataArray)
-                }
-            }else {
-                if(v < -(1 << 7)) {
-                    flag = INT16
-                    dataArray = Array<Byte>(2, repeat: 0u8)
-                    UInt16(v).writeBigEndian(dataArray)
-                }else {
-                    flag = INT8
-                    dataArray = [UInt8(v)]
-                }
-            }
-        }else if (v < (1 << 7)) { // < 128 fixint
-            flag = UInt8(v)
-        }else { //uint
-            if(v < (1 << 16)) {
-                if(v < (1 << 8)) {
-                    flag = UINT8
-                    dataArray = [UInt8(v)]
-                }else {
-                    flag = UINT16
-                    dataArray = Array<Byte>(2, repeat: 0u8)
-                    UInt16(v).writeBigEndian(dataArray)
-                }
-            }else {
-                if(v < (1 << 32)) {
-                    flag = UINT32
-                    dataArray = Array<Byte>(4, repeat: 0u8)
-                    UInt32(v).writeBigEndian(dataArray)
-                }else {
-                    flag = UINT64
-                    dataArray = Array<Byte>(8, repeat: 0u8)
-                    UInt64(v).writeBigEndian(dataArray)
-                }
-            }
-        }
-        pack(flag)
-        pack(dataArray)
-    }
-
-    public func packUInt8(value: UInt8): Unit {
-        var flag: Byte = 0x00
-        var dataArray: Array<Byte> = []
-        if (value < (1 << 7)) { // < 128 fixint
-            flag = value
-        }else { //uint
-            flag = UINT8
-            dataArray = [value]
-        }
-        pack(flag)
-        pack(dataArray)
-    }
-
-    public func packUInt16(value: UInt16): Unit {
-        var flag: Byte = 0x00
-        var dataArray: Array<Byte> = []
-        if (value < (1 << 7)) { // < 128 fixint
-            flag = UInt8(value)
-        }else { //uint
             if(value < (1 << 8)) {
-                flag = UINT8
-                dataArray = [UInt8(value)]
-            }else {
-                flag = UINT16
-                dataArray = Array<Byte>(2, repeat: 0u8)
-                value.writeBigEndian(dataArray)
+                writeUInt8(UInt8(value))
+            }else if (value < (1 << 16)) {
+                writeUInt16(UInt16(value))
+            } else  {
+                writeUInt32(UInt32(value))
             }
         }
-        pack(flag)
-        pack(dataArray)
     }
 
-    public func packUInt32(value: UInt32): Unit {
-        var flag: Byte = 0x00
-        var dataArray: Array<Byte> = []
-        if (value < (1 << 7)) { // < 128 fixint
-            flag = UInt8(value)
-        }else { //uint
-            if(value < (1 << 16)) {
-                if(value < (1 << 8)) {
-                    flag = UINT8
-                    dataArray = [UInt8(value)]
+    public func packInt64(value: Int64): Unit {
+        if(value < -(1 << 5)) { // < -32 int
+            if(value < -(1 << 15)) { 
+                if(value < -(1 << 31)) {
+                    writeInt64(value)
                 }else {
-                    flag = UINT16
-                    dataArray = Array<Byte>(2, repeat: 0u8)
-                    UInt16(value).writeBigEndian(dataArray)
+                    writeInt32(Int32(value))
                 }
             }else {
-                flag = UINT32
-                dataArray = Array<Byte>(4, repeat: 0u8)
-                value.writeBigEndian(dataArray)
+                if(value < -(1 << 7)) {
+                    writeInt16(Int16(value))
+                }else {
+                    writeInt8(Int8(value))
+                }
             }
-        }
-        pack(flag)
-        pack(dataArray)
-    }
-
-    public func packUInt64(value: UInt64): Unit {
-        var flag: Byte = 0x00
-        var dataArray: Array<Byte> = []
-        if (value < (1 << 7)) { // < 128 fixint
-            flag = UInt8(value)
+        }else if (value < (1 << 7)) { // < 128 fixint
+            writeFixInt(Int8(value))
         }else { //uint
             if(value < (1 << 16)) {
                 if(value < (1 << 8)) {
-                    flag = UINT8
-                    dataArray = [UInt8(value)]
+                    writeUInt8(UInt8(value))
                 }else {
-                    flag = UINT16
-                    dataArray = Array<Byte>(2, repeat: 0u8)
-                    UInt16(value).writeBigEndian(dataArray)
+                    writeUInt16(UInt16(value))
                 }
             }else {
                 if(value < (1 << 32)) {
-                    flag = UINT32
-                    dataArray = Array<Byte>(4, repeat: 0u8)
-                    UInt32(value).writeBigEndian(dataArray)
+                    writeUInt32(UInt32(value))
                 }else {
-                    flag = UINT64
-                    dataArray = Array<Byte>(8, repeat: 0u8)
-                    value.writeBigEndian(dataArray)
+                    writeUInt64(UInt64(value))
                 }
             }
         }
-        pack(flag)
-        pack(dataArray)
+    }
+
+    public func packUInt8(value: UInt8): Unit {
+        if (value < (1 << 7)) { // < 128 fixint
+            writeFixInt(value)
+        }else { //uint
+            writeUInt8(value)
+        }
+    }
+
+    public func packUInt16(value: UInt16): Unit {
+        if (value < (1 << 7)) { // < 128 fixint
+            writeFixInt(UInt8(value))
+        }else { //uint
+            if(value < (1 << 8)) {
+                writeUInt8(UInt8(value))
+            }else {
+                writeUInt16(value)
+            }
+        }
+    }
+
+    public func packUInt32(value: UInt32): Unit {
+        if (value < (1 << 7)) { // < 128 fixint
+            writeFixInt(UInt8(value))
+        }else { //uint
+            if(value < (1 << 16)) {
+                if(value < (1 << 8)) {
+                    writeUInt8(UInt8(value))
+                }else {
+                    writeUInt16(UInt16(value))
+                }
+            }else {
+                writeUInt32(value)
+            }
+        }
+    }
+
+    public func packUInt64(value: UInt64): Unit {
+        if (value < (1 << 7)) { // < 128 fixint
+           writeFixInt(UInt8(value))
+        }else { //uint
+            if(value < (1 << 16)) {
+                if(value < (1 << 8)) {
+                    writeUInt8(UInt8(value))
+                }else {
+                    writeUInt16(UInt16(value))
+                }
+            }else {
+                if(value < (1 << 32)) {
+                    writeUInt32(UInt32(value))
+                }else {
+                    writeUInt64(value)
+                }
+            }
+        }
     }
 
     public func packString(value: String): Unit {
@@ -258,34 +178,34 @@ public class MessagePacker {
         } else {
             throw Exception("string is too long")
         }
-        pack(flag)
-        pack(sizeArray)
-        pack(value.toArray())
+        output.write(flag)
+        output.write(sizeArray)
+        output.write(value.toArray())
     }
 
     public func packBool(value: Bool): Unit {
         match (value) {
-            case true => pack(TRUE)
-            case false => pack(FALSE)
+            case true => output.write(TRUE)
+            case false => output.write(FALSE)
         }
     }
 
     public func packFloat64(value: Float64): Unit {
         var tmp = Array<Byte>(8, repeat: 0u8)
         value.writeBigEndian(tmp)
-        pack(FLOAT64)
-        pack(tmp)
+        output.write(FLOAT64)
+        output.write(tmp)
     }
 
     public func packFloat32(value: Float32): Unit {
         var tmp = Array<Byte>(4, repeat: 0u8)
         value.writeBigEndian(tmp)
-        pack(FLOAT32)
-        pack(tmp)
+        output.write(FLOAT32)
+        output.write(tmp)
     }
 
     public func packNull(): Unit {
-        return pack(NULL)
+        return output.write(NULL)
     }
 
     public func packMapHeader(value: Int): Unit {
@@ -307,8 +227,8 @@ public class MessagePacker {
         } else {
             throw Exception("map size is too loong")
         }
-        pack(flag)
-        pack(sizeArray)
+        output.write(flag)
+        output.write(sizeArray)
     }
 
     public func packArrayHeader(value: Int): Unit {
@@ -330,8 +250,8 @@ public class MessagePacker {
         } else {
             throw IllegalArgumentException("array is too long")
         }
-        pack(flag)
-        pack(sizeArray)
+        output.write(flag)
+        output.write(sizeArray)
     }
 
     @OverflowWrapping
@@ -355,37 +275,37 @@ public class MessagePacker {
     }
 
     private func writeTimestamp32(sec: Int32): Unit {
-        pack(FIXEXT4)
-        pack(EXT_TIMESTAMP)
+        output.write(FIXEXT4)
+        output.write(EXT_TIMESTAMP)
 
         var dataArray: Array<Byte> = Array<Byte>(4, repeat: 0u8)
         UInt32(sec).writeBigEndian(dataArray)
-        pack(dataArray)
+        output.write(dataArray)
     }
 
     @OverflowWrapping
     private func writeTimestamp64(data64: Int64): Unit {
-        pack(FIXEXT8)
-        pack(EXT_TIMESTAMP)
+        output.write(FIXEXT8)
+        output.write(EXT_TIMESTAMP)
 
         var dataArray: Array<Byte> = Array<Byte>(8, repeat: 0u8)
         UInt64(data64).writeBigEndian(dataArray)
-        pack(dataArray)
+        output.write(dataArray)
     }
 
     @OverflowWrapping
     private func writeTimestamp96(sec: Int64, nsec: Int32): Unit {
-        pack(EXT8)
-        pack(12)
-        pack(EXT_TIMESTAMP)
+        output.write(EXT8)
+        output.write(12)
+        output.write(EXT_TIMESTAMP)
 
         var dataArray: Array<Byte> = Array<Byte>(4, repeat: 0u8)
         UInt32(nsec).writeBigEndian(dataArray)
-        pack(dataArray)
+        output.write(dataArray)
 
         var dataArrayInt64: Array<Byte> = Array<Byte>(8, repeat: 0u8)
         UInt64(sec).writeBigEndian(dataArrayInt64)
-        pack(dataArrayInt64)
+        output.write(dataArrayInt64)
     }
 
     public func packBinary(value: Array<Byte>): Unit {
@@ -406,20 +326,73 @@ public class MessagePacker {
         }else {
             throw Exception("binary data is too loong")
         }
-        pack(flag)
-        pack(sizeArray)
-        pack(value)
+        output.write(flag)
+        output.write(sizeArray)
+        output.write(value)
     }
 
-    private func pack(byte: Byte): Unit {
-        output.write(byte)
+    @OverflowWrapping
+    private func writeFixInt(value: Int8) {
+        output.write(UInt8(value))
     }
 
-    private func pack(bytes: Array<Byte>): Unit {
-        if(bytes.size == 0) {
-            return 
-        }
-        output.write(bytes)
+    private func writeFixInt(value: UInt8) {
+        output.write(value)
+    }
+
+    @OverflowWrapping
+    private func writeInt8(value: Int8) {
+        let temp = Array<Byte>(1, repeat: 0)
+        value.writeBigEndian(temp)
+        output.write(INT8)
+        output.write(temp)
+    }
+
+    private func writeInt16(value: Int16) {
+        let temp = Array<Byte>(2, repeat: 0)
+        value.writeBigEndian(temp)
+        output.write(INT16)
+        output.write(temp)
+    }
+
+    private func writeInt32(value: Int32) {
+        let temp = Array<Byte>(4, repeat: 0)
+        value.writeBigEndian(temp)
+        output.write(INT32)
+        output.write(temp)
+    }
+
+    private func writeInt64(value: Int64) {
+        let temp = Array<Byte>(8, repeat: 0)
+        value.writeBigEndian(temp)
+        output.write(INT64)
+        output.write(temp)
+    }
+
+    private func writeUInt8(value: UInt8) {
+        output.write(UINT8)
+        output.write(value)
+    }
+
+    private func writeUInt16(value: UInt16) {
+        let temp = Array<Byte>(2, repeat: 0)
+        value.writeBigEndian(temp)
+        output.write(UINT16)
+        output.write(temp)
+    }
+
+    private func writeUInt32(value: UInt32) {
+        let temp = Array<Byte>(4, repeat: 0)
+        value.writeBigEndian(temp)
+        output.write(UINT32)
+        output.write(temp)
+    }
+
+    private func writeUInt64(value: UInt64) {
+        let temp = Array<Byte>(8, repeat: 0)
+        value.writeBigEndian(temp)
+        output.write(UINT64)
+        output.write(temp)
     }
 
 }
