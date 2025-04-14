@@ -118,33 +118,147 @@ public class MessageUnpacker {
         return size
     }
 
-    @OverflowThrowing
+    @OverflowWrapping
     public func unpackInt8(): Int8 {
-        let i64 = unpackInt64()
-        try {
-            return Int8(i64)
-        }catch (e: OverflowException) {
-            throw MessageIntegerOverflowException(BigInt(i64))
+        let flag = current ?? nextFlag()
+        current = None
+        if (isFixInt(flag)) {
+            return Int8(flag)
+        }
+        match (flag) {
+            case 0xCC =>
+                let u8 = readUInt8()
+                if(u8 >= 1 << 7) {
+                     throw MessageIntegerOverflowException(BigInt(u8))
+                }
+                return Int8(u8)  // UInt8
+            case 0xCD =>
+                let u16 = readUInt16() // UInt16
+                if(u16 >= 1 << 7) {
+                    throw MessageIntegerOverflowException(BigInt(u16))
+                }
+                return Int8(u16)  
+            case 0xCE =>
+                let u32 = readUInt32() // UInt32
+                if(u32 >= 1 << 7) {
+                    throw MessageIntegerOverflowException(BigInt(u32))
+                }
+                return Int8(u32)  
+            case 0xCF => 
+                let u64 = readUInt64() // UInt64
+                if (u64 >= 1 << 7) {
+                    throw MessageIntegerOverflowException(BigInt(u64))
+                }
+                return Int8(u64)
+            case 0xD0 =>
+                return readInt8() //Int8
+            case 0xD1 =>
+                let i16 = readInt16()
+                if(i16 >= 1 << 7 || i16 < -(1 << 7)) {
+                    throw MessageIntegerOverflowException(BigInt(i16))
+                }
+                return Int8(i16) //Int16
+            case 0xD2 =>
+                let i32 = readInt32() //Int32
+                if(i32 >= 1 << 7 || i32 < -(1 << 7)) {
+                    throw MessageIntegerOverflowException(BigInt(i32))
+                }
+                return Int8(i32) 
+            case 0xD3 =>
+                let i64 = readInt64() //Int64
+                if(i64 >= 1 << 7 || i64 < -(1 << 7) ) {
+                    throw MessageIntegerOverflowException(BigInt(i64))
+                }
+                return Int8(i64) 
+            case _ => throw MessageTypeException()
         }
     }
 
-    @OverflowThrowing
+     @OverflowWrapping
     public func unpackInt16(): Int16 {
-        let i64 = unpackInt64()
-        try {
-            return Int16(i64)
-        }catch (e: OverflowException) {
-            throw MessageIntegerOverflowException(BigInt(i64))
+        let flag = current ?? nextFlag()
+        current = None
+        if (isFixInt(flag)) {
+            return Int16(Int8(flag))
+        }
+        match (flag) {
+            case 0xCC =>
+                return Int16(readByte())  // UInt8
+            case 0xCD =>
+                let u16 = readUInt16() // UInt16
+                if(u16 >= 1 << 15) {
+                    throw MessageIntegerOverflowException(BigInt(u16))
+                }
+                return Int16(u16)  
+            case 0xCE =>
+                let u32 = readUInt32() // UInt32
+                if(u32 >= 1 << 15) {
+                    throw MessageIntegerOverflowException(BigInt(u32))
+                }
+                return Int16(u32)  
+            case 0xCF => 
+                let u64 = readUInt64() // UInt64
+                if (u64 >= 1 << 15) {
+                    throw MessageIntegerOverflowException(BigInt(u64))
+                }
+                return Int16(u64)
+            case 0xD0 =>
+                return Int16(readInt8()) //Int8
+            case 0xD1 =>
+                return readInt16() //Int16
+            case 0xD2 =>
+                let i32 = readInt32() //Int32
+                if(i32 >= 1 << 15 || i32 < -(1 << 15)) {
+                    throw MessageIntegerOverflowException(BigInt(i32))
+                }
+                return Int16(i32) 
+            case 0xD3 =>
+                let i64 = readInt64() //Int64
+                if(i64 >= 1 << 15 || i64 < -(1 << 15) ) {
+                    throw MessageIntegerOverflowException(BigInt(i64))
+                }
+                return Int16(i64) 
+            case _ => throw MessageTypeException()
         }
     }
 
-    @OverflowThrowing
+    @OverflowWrapping
     public func unpackInt32(): Int32 {
-        let i64 = unpackInt64()
-        try {
-            return Int32(i64)
-        }catch (e: OverflowException) {
-            throw MessageIntegerOverflowException(BigInt(i64))
+        let flag = current ?? nextFlag()
+        current = None
+        if (isFixInt(flag)) {
+            return Int32(Int8(flag))
+        }
+        match (flag) {
+            case 0xCC =>
+                return Int32(readByte())  // UInt8
+            case 0xCD =>
+                return Int32(readUInt16())  // UInt16
+            case 0xCE =>
+                let u32 = readUInt32() // UInt32
+                if(u32 >= 1 << 31) {
+                    throw MessageIntegerOverflowException(BigInt(u32))
+                }
+                return Int32(u32)  
+            case 0xCF => 
+                let u64 = readUInt64() // UInt64
+                if (u64 >= 1 << 31) {
+                    throw MessageIntegerOverflowException(BigInt(u64))
+                }
+                return Int32(u64)
+            case 0xD0 =>
+                return Int32(readInt8()) //Int8
+            case 0xD1 =>
+                return Int32(readInt16()) //Int16
+            case 0xD2 =>
+                return readInt32() //Int32
+            case 0xD3 =>
+                let i64 = readInt64() //Int64
+                if(i64 >= 1 << 31 || i64 < -(1 << 31) ) {
+                    throw MessageIntegerOverflowException(BigInt(i64))
+                }
+                return Int32(i64) 
+            case _ => throw MessageTypeException()
         }
     }
 
@@ -152,7 +266,7 @@ public class MessageUnpacker {
     public func unpackInt64(): Int64 {
         let flag = current ?? nextFlag()
         current = None
-        if (flag <= 0x7f || flag >= 0xe0) {
+        if (isFixInt(flag)) {
             return Int64(Int8(flag))
         }
         match (flag) {
@@ -163,9 +277,9 @@ public class MessageUnpacker {
             case 0xCE =>
                 return Int64(readUInt32())  // UInt32
             case 0xCF =>
-                let i64 = readInt64()  // UInt64
-                if (i64 < 0) {
-                    throw MessageIntegerOverflowException(BigInt(i64))
+                let u64 = readUInt64()  // UInt64
+                if (u64 >= 1 << 63) {
+                    throw MessageIntegerOverflowException(BigInt(u64))
                 }
                 return Int64(64)
             case 0xD0 =>
@@ -180,33 +294,171 @@ public class MessageUnpacker {
         }
     }
 
-    @OverflowThrowing
+    @OverflowWrapping
     public func unpackUInt8(): UInt8 {
-        let u64 = unpackUInt64()
-        try {
-            return UInt8(u64)
-        }catch (e: OverflowException) {
-            throw MessageIntegerOverflowException(BigInt(u64))
+        let flag = current ?? nextFlag()
+        current = None
+        if (isFixInt(flag)) {
+            let i8 = Int8(flag)
+            if(i8 < 0) {
+                throw MessageIntegerOverflowException(BigInt(i8))
+            }
+            return UInt8(i8)
+        }
+        match (flag) {
+            case 0xCC =>
+                return readUInt8()  // UInt8
+            case 0xCD =>
+                let u16 = readUInt16() // UInt16
+                if(u16 >= 1 << 8) {
+                     throw MessageIntegerOverflowException(BigInt(u16))
+                }
+                return UInt8(8)
+            case 0xCE =>
+                let u32 = readUInt32() // UInt32
+                if(u32 >= 1 << 8) {
+                    throw MessageIntegerOverflowException(BigInt(u32))
+                }
+                return UInt8(u32)  
+            case 0xCF =>
+                let u64 = readUInt64() // UInt64
+                if(u64 >= 1 << 8) {
+                    throw MessageIntegerOverflowException(BigInt(u64))
+                }
+                return UInt8(u64) 
+            case 0xD0 =>
+                let i8 = readInt8() //Int8
+                if(i8 < 0) {
+                    throw MessageIntegerOverflowException(BigInt(i8))
+                }
+                return UInt8(i8)  
+            case 0xD1 =>
+                let i16 = readInt16() //Int16
+                if(i16 < 0 || i16 >= 1 << 8) {
+                    throw MessageIntegerOverflowException(BigInt(i16))
+                }
+                return UInt8(i16)  
+            case 0xD2 =>
+                let i32 = readInt32() //Int32
+                if(i32 < 0 || i32 >= 1 << 8) {
+                    throw MessageIntegerOverflowException(BigInt(i32))
+                }
+                return UInt8(i32)  
+            case 0xD3 =>
+                let i64 = readInt64() //Int64
+                if(i64 < 0 || i64 >= 1 << 8) {
+                    throw MessageIntegerOverflowException(BigInt(i64))
+                }
+                return UInt8(i64)
+            case _ => throw MessageTypeException()
         }
     }
 
-    @OverflowThrowing
+    @OverflowWrapping
     public func unpackUInt16(): UInt16 {
-        let u64 = unpackUInt64()
-        try {
-            return UInt16(u64)
-        }catch (e: OverflowException) {
-            throw MessageIntegerOverflowException(BigInt(u64))
+        let flag = current ?? nextFlag()
+        current = None
+        if (isFixInt(flag)) {
+            let i8 = Int8(flag)
+            if(i8 < 0) {
+                throw MessageIntegerOverflowException(BigInt(i8))
+            }
+            return UInt16(i8)
+        }
+        match (flag) {
+            case 0xCC =>
+                return UInt16(readByte())  // UInt8
+            case 0xCD =>
+                return readUInt16()  // UInt16
+            case 0xCE =>
+                let u32 = readUInt32() // UInt32
+                if(u32 >= 1 << 16) {
+                    throw MessageIntegerOverflowException(BigInt(u32))
+                }
+                return UInt16(u32)  
+            case 0xCF =>
+                let u64 = readUInt64() // UInt64
+                if(u64 >= 1 << 16) {
+                    throw MessageIntegerOverflowException(BigInt(u64))
+                }
+                return UInt16(u64) 
+            case 0xD0 =>
+                let i8 = readInt8() //Int8
+                if(i8 < 0) {
+                    throw MessageIntegerOverflowException(BigInt(i8))
+                }
+                return UInt16(i8)  
+            case 0xD1 =>
+                let i16 = readInt16() //Int16
+                if(i16 < 0) {
+                    throw MessageIntegerOverflowException(BigInt(i16))
+                }
+                return UInt16(i16)  
+            case 0xD2 =>
+                let i32 = readInt32() //Int32
+                if(i32 < 0 || i32 >= 1 << 16) {
+                    throw MessageIntegerOverflowException(BigInt(i32))
+                }
+                return UInt16(i32)  
+            case 0xD3 =>
+                let i64 = readInt64() //Int64
+                if(i64 < 0 || i64 >= 1 << 16) {
+                    throw MessageIntegerOverflowException(BigInt(i64))
+                }
+                return UInt16(i64)
+            case _ => throw MessageTypeException()
         }
     }
 
-    @OverflowThrowing
+    @OverflowWrapping
     public func unpackUInt32(): UInt32 {
-        let u64 = unpackUInt64()
-        try {
-            return UInt32(u64)
-        }catch (e: OverflowException) {
-            throw MessageIntegerOverflowException(BigInt(u64))
+        let flag = current ?? nextFlag()
+        current = None
+        if (isFixInt(flag)) {
+            let i8 = Int8(flag)
+            if(i8 < 0) {
+                throw MessageIntegerOverflowException(BigInt(i8))
+            }
+            return UInt32(i8)
+        }
+        match (flag) {
+            case 0xCC =>
+                return UInt32(readByte())  // UInt8
+            case 0xCD =>
+                return UInt32(readUInt16())  // UInt16
+            case 0xCE =>
+                return readUInt32()  // UInt32
+            case 0xCF =>
+                let u64 = readUInt64() // UInt64
+                if(u64 >= 1 << 32) {
+                    throw MessageIntegerOverflowException(BigInt(u64))
+                }
+                return UInt32(u64) 
+            case 0xD0 =>
+                let i8 = readInt8() //Int8
+                if(i8 < 0) {
+                    throw MessageIntegerOverflowException(BigInt(i8))
+                }
+                return UInt32(i8)  
+            case 0xD1 =>
+                let i16 = readInt16() //Int16
+                if(i16 < 0) {
+                    throw MessageIntegerOverflowException(BigInt(i16))
+                }
+                return UInt32(i16)  
+            case 0xD2 =>
+                let i32 = readInt32() //Int32
+                if(i32 < 0) {
+                    throw MessageIntegerOverflowException(BigInt(i32))
+                }
+                return UInt32(i32)  
+            case 0xD3 =>
+                let i64 = readInt64() //Int64
+                if(i64 < 0 || i64 >= 1 << 32) {
+                    throw MessageIntegerOverflowException(BigInt(i64))
+                }
+                return UInt32(i64)
+            case _ => throw MessageTypeException()
         }
     }
 
@@ -214,7 +466,7 @@ public class MessageUnpacker {
     public func unpackUInt64(): UInt64 {
         let flag = current ?? nextFlag()
         current = None
-        if (flag >= NEGATIVE_FIXINT_MIN || flag <= POSITIVE_FIXINT_MAX) {
+        if (isFixInt(flag)) {
             let i8 = Int8(flag)
             if(i8 < 0) {
                 throw MessageIntegerOverflowException(BigInt(i8))

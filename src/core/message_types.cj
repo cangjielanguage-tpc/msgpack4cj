@@ -88,3 +88,7 @@ protected const EXT_TIMESTAMP: Byte = 255
 protected const EXT8: Byte = 0xC7
 protected const EXT16: Byte = 0xC8
 protected const EXT32: Byte = 0xC9
+
+protected func isFixInt(flag: Byte): Bool {
+    return flag >= NEGATIVE_FIXINT_MIN || flag <= POSITIVE_FIXINT_MAX
+}
