@@ -36,7 +36,7 @@ public class MessageUnpacker {
         if (flag == FALSE) {
             return false
         }
-        throw IllegalArgumentException("this is not bool flag")
+       throw unexpected("Bool", flag)
     }
 
     public func unpackNull(): Unit {
@@ -44,22 +44,32 @@ public class MessageUnpacker {
         current = None
         if (flag == NULL) {
         } else {
-            throw IllegalArgumentException("this is not null type")
+            throw unexpected("Null", flag)
         }
+    }
+
+    public func unpackFloat32(): Float32 {
+        let flag = current ?? nextFlag()
+        current = None
+        if (flag == FLOAT32) {
+            return readFloat32()
+        }
+        if (flag == FLOAT64) {
+            return Float32(readFloat64())
+        }
+        throw unexpected("Float", flag)
     }
 
     public func unpackFloat64(): Float64 {
         let flag = current ?? nextFlag()
         current = None
         if (flag == FLOAT32) {
-            let slice = readBytes(4)
-            return Float64(Float32.readBigEndian(slice))
+            return Float64(readFloat32())
         }
         if (flag == FLOAT64) {
-            let slice = readBytes(8)
-            return Float64.readBigEndian(slice)
+            return readFloat64()
         }
-        throw IllegalArgumentException("this is not float type")
+        throw unexpected("Float", flag)
     }
 
     public func unpackString(): String {
@@ -69,15 +79,13 @@ public class MessageUnpacker {
         if (flag >= FIXSTR_MIN && flag <= FIXSTR_MAX) {
             size = Int64(flag - FIXSTR_MIN)
         } else if (flag == STR8) {
-            size = Int64(readByte())
+            size = Int64(readUInt8())
         } else if (flag == STR16) {
-            let slice = readBytes(2)
-            size = Int64(UInt16.readBigEndian(slice))
+            size = Int64(readUInt16())
         } else if (flag == STR32) {
-            let slice = readBytes(4)
-            size = Int64(UInt16.readBigEndian(slice))
+            size = Int64(readUInt32())
         } else {
-            throw IllegalArgumentException("this is not string type")
+            throw unexpected("String", flag)
         }
         return String.fromUtf8(readBytes(size))
     }
@@ -89,13 +97,11 @@ public class MessageUnpacker {
         if (flag >= FIXMAP_MIN && flag <= FIXMAP_MAX) {
             size = Int64(flag - FIXMAP_MIN)
         } else if (flag == MAP16) {
-            let slice = readBytes(2)
-            size = Int64(UInt16.readBigEndian(slice))
+            size = Int64(readUInt16())
         } else if (flag == MAP32) {
-            let slice = readBytes(4)
-            size = Int64(UInt32.readBigEndian(slice))
+            size = Int64(readUInt32())
         } else {
-            throw IllegalArgumentException("this is not map type")
+            throw unexpected("Map", flag)
         }
         return size
     }
@@ -107,13 +113,11 @@ public class MessageUnpacker {
         if (flag >= FIXARR_MIN && flag <= FIXARR_MAX) {
             size = Int64(flag - FIXARR_MIN)
         } else if (flag == ARR16) {
-            let slice = readBytes(2)
-            size = Int64(UInt16.readBigEndian(slice))
+            size = Int64(readUInt16())
         } else if (flag == ARR32) {
-            let slice = readBytes(4)
-            size = Int64(UInt32.readBigEndian(slice))
+            size = Int64(readUInt32())
         } else {
-            throw IllegalArgumentException("this is not array type")
+            throw unexpected("Array", flag)
         }
         return size
     }
@@ -170,7 +174,7 @@ public class MessageUnpacker {
                     throw MessageIntegerOverflowException(BigInt(i64))
                 }
                 return Int8(i64) 
-            case _ => throw MessageTypeException()
+            case _ => throw unexpected("Integer", flag)
         }
     }
 
@@ -218,7 +222,7 @@ public class MessageUnpacker {
                     throw MessageIntegerOverflowException(BigInt(i64))
                 }
                 return Int16(i64) 
-            case _ => throw MessageTypeException()
+            case _ => throw unexpected("Integer", flag)
         }
     }
 
@@ -258,7 +262,7 @@ public class MessageUnpacker {
                     throw MessageIntegerOverflowException(BigInt(i64))
                 }
                 return Int32(i64) 
-            case _ => throw MessageTypeException()
+            case _ => throw unexpected("Integer", flag)
         }
     }
 
@@ -290,7 +294,7 @@ public class MessageUnpacker {
                 return Int64(readInt32())  //Int32
             case 0xD3 =>
                 return readInt64()  //Int64
-            case _ => throw MessageTypeException()
+            case _ => throw unexpected("Integer", flag)
         }
     }
 
@@ -350,7 +354,7 @@ public class MessageUnpacker {
                     throw MessageIntegerOverflowException(BigInt(i64))
                 }
                 return UInt8(i64)
-            case _ => throw MessageTypeException()
+            case _ => throw unexpected("Integer", flag)
         }
     }
 
@@ -406,7 +410,7 @@ public class MessageUnpacker {
                     throw MessageIntegerOverflowException(BigInt(i64))
                 }
                 return UInt16(i64)
-            case _ => throw MessageTypeException()
+            case _ => throw unexpected("Integer", flag)
         }
     }
 
@@ -458,7 +462,7 @@ public class MessageUnpacker {
                     throw MessageIntegerOverflowException(BigInt(i64))
                 }
                 return UInt32(i64)
-            case _ => throw MessageTypeException()
+            case _ => throw unexpected("Integer", flag)
         }
     }
 
@@ -506,7 +510,7 @@ public class MessageUnpacker {
                     throw MessageIntegerOverflowException(BigInt(i64))
                 }
                 return UInt64(i64)
-            case _ => throw MessageTypeException()
+            case _ => throw unexpected("Integer", flag)
         }
     }
 
@@ -553,6 +557,7 @@ public class MessageUnpacker {
         let b = max >> (bits - 1)
         return b & (value >> bits)
     }
+
     private static func unexpectedExtension(expected: String, expectedType: Int32, actualType: Int32): MessagePackException {
         return MessageTypeException(
             "Expected extension type ${expected} (${expectedType}), but got extension type ${actualType}")
@@ -610,13 +615,11 @@ public class MessageUnpacker {
         if (flag == BIN8) {
             size = Int64(readByte())
         } else if (flag == BIN16) {
-            let slice = readBytes(2)
-            size = Int64(Int16.readBigEndian(slice))
+            size = Int64(readUInt16())
         } else if (flag == BIN32) {
-            let slice = readBytes(4)
-            size = Int64(Int16.readBigEndian(slice))
+            size = Int64(readUInt32())
         } else {
-            throw IllegalArgumentException("this is not binary type")
+            throw unexpected("Binary", flag)
         }
         return readBytes(size)    
     }
@@ -734,6 +737,14 @@ public class MessageUnpacker {
         return UInt64.readBigEndian(readBytes(8))
     }
 
+    private func readFloat32(): Float32 {
+        return Float32.readBigEndian(readBytes(4))
+    }
+
+    private func readFloat64(): Float64 {
+        return Float64.readBigEndian(readBytes(8))
+    }
+
     private func readByte(): Byte {
         let temp = Array<Byte>(1, repeat: 0)
         if (input.read(temp) != 1) {
@@ -755,7 +766,8 @@ public class MessageUnpacker {
         return MessageSizeException(lv)
     }
 
-    public static func unexpected(expected: String, b: Byte): MessagePackException {
-        return MessagePackException(expected)
+    public static func unexpected(expected: String, flag: Byte): MessagePackException {
+        let message = "Expected ${expected}, but got ${flag}"
+        return MessagePackException(message)
     }
 }
