@@ -15,12 +15,28 @@ public class MessageUnpacker {
 
     private var current: ?Byte = None
 
+    private var allowReadingStringAsBinary: Bool
+
+    private var allowReadingBinaryAsString: Bool
+
+    private var stringSizeLimit: Int64
+
+    private var binarySizeLimit: Int64
+
+    public init(input: InputStream, config: UnpackerConfig) {
+        this.input = input
+        this.allowReadingBinaryAsString = config.allowReadingBinaryAsString
+        this.allowReadingStringAsBinary = config.allowReadingStringAsBinary
+        this.stringSizeLimit = config.stringSizeLimit
+        this.binarySizeLimit = config.binarySizeLimit
+    }
+
     public init(content: Array<Byte>) {
-        this.input = ByteBuffer(content)
+        this(ByteBuffer(content), UnpackerConfig())
     }
 
     public init(input: InputStream) {
-        this.input = input
+        this(input, UnpackerConfig())
     }
 
     public func nextFlag(): Byte {
@@ -73,28 +89,26 @@ public class MessageUnpacker {
     }
 
     public func unpackString(): String {
-        let flag = current ?? nextFlag()
-        current = None
-        var size = 0
-        if (flag >= FIXSTR_MIN && flag <= FIXSTR_MAX) {
-            size = Int64(flag - FIXSTR_MIN)
-        } else if (flag == STR8) {
-            size = Int64(readUInt8())
-        } else if (flag == STR16) {
-            size = Int64(readUInt16())
-        } else if (flag == STR32) {
-            size = Int64(readUInt32())
-        } else {
-            throw unexpected("String", flag)
+        let len = readRawStringHeader()
+        if(len > stringSizeLimit) {
+            throw MessageSizeException("cannot unpack a String of size larger than ${stringSizeLimit}, ${len}", len)
         }
-        return String.fromUtf8(readBytes(size))
+        return String.fromUtf8(readBytes(len))
+    }
+
+    public func unpackBinary(): Array<Byte> {
+        let len = readBinaryHeader()
+        if(len > binarySizeLimit) {
+             throw MessageSizeException("cannot unpack a Binary of size larger than ${binarySizeLimit}, ${len}", len)
+        }
+        return readBytes(len)
     }
 
     public func unpackMapHeader(): Int {
         let flag = current ?? nextFlag()
         current = None
         var size = 0
-        if (flag >= FIXMAP_MIN && flag <= FIXMAP_MAX) {
+        if (isFixMap(flag)) {
             size = Int64(flag - FIXMAP_MIN)
         } else if (flag == MAP16) {
             size = Int64(readUInt16())
@@ -110,7 +124,7 @@ public class MessageUnpacker {
         let flag = current ?? nextFlag()
         current = None
         var size = 0
-        if (flag >= FIXARR_MIN && flag <= FIXARR_MAX) {
+        if (isFixArr(flag)) {
             size = Int64(flag - FIXARR_MIN)
         } else if (flag == ARR16) {
             size = Int64(readUInt16())
@@ -608,22 +622,6 @@ public class MessageUnpacker {
         throw unexpected("Ext", b)
     }
 
-    public func unpackBinary(): Array<Byte> {
-        let flag = current ?? nextFlag()
-        current = None
-        var size = 0
-        if (flag == BIN8) {
-            size = Int64(readByte())
-        } else if (flag == BIN16) {
-            size = Int64(readUInt16())
-        } else if (flag == BIN32) {
-            size = Int64(readUInt32())
-        } else {
-            throw unexpected("Binary", flag)
-        }
-        return readBytes(size)    
-    }
-
     protected func nextIsBinayType(): Bool {
         let flag = current ?? nextFlag()
         current = flag
@@ -704,6 +702,61 @@ public class MessageUnpacker {
         }
         return false
     }
+
+    private func readRawStringHeader(): Int {
+        let flag = current ?? nextFlag()
+        current = None
+        if (isFixStr(flag)) {
+            return Int64(flag - FIXSTR_MIN)
+        }
+        var len = tryReadStringHeader(flag)
+        if (let Some(v) <- len) {
+            return v
+        }
+        if (allowReadingBinaryAsString) {
+            len = tryReadBinaryHeader(flag)
+            if(let Some(v) <- len) {
+                return v
+            }
+        }
+        throw unexpected("String", flag)
+    }
+
+    private func readBinaryHeader(): Int {
+        let flag = current ?? nextFlag()
+        current = None
+        if(let Some(v) <- tryReadBinaryHeader(flag)) {
+            return v
+        }
+        if(allowReadingStringAsBinary) {
+            if (isFixStr(flag)) {
+                return Int64(flag - FIXSTR_MIN)
+            }
+            if(let Some(v) <- tryReadStringHeader(flag)) {
+                return v
+            }
+        }
+        throw unexpected("Binary", flag)  
+    }
+
+    private func tryReadStringHeader(flag: Byte): ?Int {
+        match (flag) {
+            case 0xD9 => Int64(readUInt8())
+            case 0xDA => Int64(readUInt16())
+            case 0xDB => Int64(readUInt32())
+            case _ => None
+        }
+    }
+
+    private func tryReadBinaryHeader(flag: Byte): ?Int {
+        match (flag) {
+            case 0xC4 => Int64(readUInt8())
+            case 0xC5 => Int64(readUInt16())
+            case 0xC6 => Int64(readUInt32())
+            case _ => None
+        }
+    }
+
 
     private func readInt8(): Int8 {
         return Int8.readBigEndian(readBytes(1))

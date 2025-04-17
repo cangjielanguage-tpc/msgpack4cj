@@ -12,8 +12,18 @@ public class MessagePacker {
 
     private let output: OutputStream
 
-    public init(output: OutputStream) {
+    private let stringSizeLimit: Int64
+
+    private let binarySizeLimit: Int64
+
+    public init(output: OutputStream, config: PackerConfig) {
         this.output = output
+        this.stringSizeLimit = config.stringSizeLimit
+        this.binarySizeLimit = config.binarySizeLimit
+    }
+
+    public init(output: OutputStream) {
+        this(output, PackerConfig())
     }
 
     @OverflowWrapping
@@ -170,6 +180,9 @@ public class MessagePacker {
 
     public func packString(value: String) {
         let size = value.size
+        if(size > binarySizeLimit) {
+            throw MessageSizeException("cannot pack a String of size larger than ${stringSizeLimit}", size)
+        }
         if (size < 1 << 5) {
             writeByte(FIXSTR_MIN + UInt8(size))
         } else if (size < (1 << 8)) {
@@ -179,7 +192,7 @@ public class MessagePacker {
         } else if (size < (1 << 32)) {
             writeByteAndUInt32(STR32, UInt32(size))
         } else {
-            throw MessageSizeException("String is too long", size)
+            throw MessageSizeException("cannot pack a String of size larger than ${UInt32.Max}", size)
         }
         output.write(value.toArray())
         return this
@@ -219,7 +232,7 @@ public class MessagePacker {
         } else if (value < (1 << 32)) {
             writeByteAndUInt32(MAP32, UInt32(value))
         } else {
-           throw MessageSizeException("Map header is too big", value)
+           throw MessageSizeException("cannot pack a Map of size larger than ${UInt32.Max}", value)
         }
     }
 
@@ -234,12 +247,15 @@ public class MessagePacker {
         } else if (value < 4294967296) {
             writeByteAndUInt32(ARR32, UInt32(value))
         } else {
-            throw MessageSizeException("Array header is too big", value)
+            throw MessageSizeException("cannot pack a Array of size larger than ${UInt32.Max}", value)
         }
     }
 
     public func packBinary(value: Array<Byte>): Unit {
         var size = value.size
+        if(size > binarySizeLimit) {
+            throw MessageSizeException("cannot pack a Binary of size larger than ${binarySizeLimit}", size)
+        }
         if (size < (1 << 8)) {
             writeByteAndUInt8(BIN8, UInt8(size))
         } else if (size < (1 << 16)) {
@@ -247,7 +263,7 @@ public class MessagePacker {
         } else if (size < (1 << 32)) {
             writeByteAndUInt32(BIN32, UInt32(size))
         } else {
-            throw MessageSizeException("Binary is too long", value.size)
+            throw MessageSizeException("cannot pack a Binary of size larger than ${UInt32.Max}", value.size)
         }
         output.write(value)
     }

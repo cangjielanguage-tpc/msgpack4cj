@@ -92,3 +92,15 @@ protected const EXT32: Byte = 0xC9
 protected func isFixInt(flag: Byte): Bool {
     return flag >= NEGATIVE_FIXINT_MIN || flag <= POSITIVE_FIXINT_MAX
 }
+
+protected func isFixStr(flag: Byte): Bool {
+    return flag >= FIXSTR_MIN && flag <= FIXSTR_MAX
+}
+
+protected func isFixMap(flag: Byte): Bool {
+    return flag >= FIXMAP_MIN && flag <= FIXMAP_MAX
+}
+
+protected func isFixArr(flag: Byte): Bool {
+    return flag >= FIXARR_MIN && flag <= FIXARR_MAX
+}
