@@ -15,20 +15,20 @@ public class MessageUnpacker {
 
     private var current: ?Byte = None
 
-    private var allowReadingStringAsBinary: Bool
-
-    private var allowReadingBinaryAsString: Bool
-
     private var stringSizeLimit: Int64
 
     private var binarySizeLimit: Int64
 
+    private var allowReadingStringAsBinary: Bool
+
+    private var allowReadingBinaryAsString: Bool
+
     public init(input: InputStream, config: UnpackerConfig) {
         this.input = input
-        this.allowReadingBinaryAsString = config.allowReadingBinaryAsString
-        this.allowReadingStringAsBinary = config.allowReadingStringAsBinary
-        this.stringSizeLimit = config.stringSizeLimit
-        this.binarySizeLimit = config.binarySizeLimit
+        this.stringSizeLimit = config.getStringSizeLimit()
+        this.binarySizeLimit = config.getBinarySizeLimit()
+        this.allowReadingBinaryAsString = config.getAllowReadingBinaryAsString()
+        this.allowReadingStringAsBinary = config.getAllowReadingStringAsBinary()
     }
 
     public init(content: Array<Byte>) {

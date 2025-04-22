@@ -18,8 +18,8 @@ public class MessagePacker {
 
     public init(output: OutputStream, config: PackerConfig) {
         this.output = output
-        this.stringSizeLimit = config.stringSizeLimit
-        this.binarySizeLimit = config.binarySizeLimit
+        this.stringSizeLimit = config.getStringSizeLimit()
+        this.binarySizeLimit = config.getBinarySizeLimit()
     }
 
     public init(output: OutputStream) {
