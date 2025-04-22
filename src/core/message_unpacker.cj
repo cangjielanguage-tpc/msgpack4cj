@@ -814,6 +814,14 @@ public class MessageUnpacker {
         return temp
     }
 
+    public func readPayload(n: Int): Array<Byte> {
+        let temp = Array<Byte>(n, repeat: 0)
+        if (input.read(temp) != n) {
+            throw IllegalMemoryException()
+        }
+        return temp
+    }
+
     private static func overflowU32Size(u32: Int32): MessageSizeException {
         let lv: Int64 = Int64(u32 & 0x7fffffff) + 0x80000000
         return MessageSizeException(lv)

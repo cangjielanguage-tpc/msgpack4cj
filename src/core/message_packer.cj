@@ -236,6 +236,47 @@ public class MessagePacker {
         }
     }
 
+    @OverflowWrapping
+    public func packExtensionTypeHeader(extType: Byte, payloadLen: Int32) {
+        if (payloadLen < (1 << 8)) {
+            if (payloadLen > 0 && (payloadLen & (payloadLen - 1)) == 0) {
+                if (payloadLen == 1) {
+                    writeByteAndUInt8(FIXEXT1, extType)
+                } else if (payloadLen == 2) {
+                    writeByteAndUInt8(FIXEXT2, extType)
+                } else if (payloadLen == 4) {
+                    writeByteAndUInt8(FIXEXT4, extType)
+                } else if (payloadLen == 8) {
+                    writeByteAndUInt8(FIXEXT8, extType)
+                } else if (payloadLen == 16) {
+                    writeByteAndUInt8(FIXEXT16, extType)
+                } else {
+                    writeByteAndUInt8(EXT8, UInt8(payloadLen))
+                    output.write(extType)
+                }
+            } else {
+                writeByteAndUInt8(EXT8, UInt8(payloadLen))
+                output.write(extType)
+            }
+        } else if (payloadLen < (1 << 16)) {
+            output.write(EXT16)
+            var sizeArray = Array<Byte>(2, repeat: 0u8)
+            UInt16(payloadLen).writeBigEndian(sizeArray)
+            output.write(sizeArray)
+            output.write(extType)
+        } else {
+            output.write(EXT32)
+            var sizeArray = Array<Byte>(4, repeat: 0u8)
+            UInt32(payloadLen).writeBigEndian(sizeArray)
+            output.write(sizeArray)
+            output.write(extType)
+        }
+    }
+
+    public func writePayload(src: Array<Byte>) {
+        output.write(src)
+    }
+
     public func packArrayHeader(value: Int): Unit {
         if (value < 0) {
             throw MessageSizeException("Array header must be >= 0", value)
