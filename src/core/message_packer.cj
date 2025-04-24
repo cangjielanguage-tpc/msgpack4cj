@@ -206,6 +206,11 @@ public class MessagePacker {
         return this
     }
 
+    public func packValue(value: Value) {
+        value.writeTo(this)
+        return this
+    }
+
     public func packFloat32(value: Float32) {
         writeFloat32(value)
         return this
