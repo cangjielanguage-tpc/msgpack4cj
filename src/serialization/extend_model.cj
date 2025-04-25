@@ -11,14 +11,13 @@ import serialization.serialization.*
 extend DataModel <: ToMessagePack {
     
     public func toMessagePack(): Array<Byte> {
-        let buffer = ByteBuffer()
-        let packer = MessagePacker(buffer)
+        let packer = MessagePack.newDefaultBufferPacker()
         superPack(packer)
-        return readToEnd(buffer)
+        return packer.toByteArray()
     }
 
     public static func fromMessagePack(data: Array<Byte>): DataModel {
-        return superUnpack(MessageUnpacker(data))
+        return superUnpack(MessagePack.newDefaultUnpacker(data))
     }
 
     protected func superPack(packer: MessagePacker): Unit {
