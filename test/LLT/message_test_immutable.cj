@@ -16,6 +16,7 @@ import std.time.*
 
 @Test
 public class MessageTestImmutable {
+
     @TestCase
     public func test1(): Unit {
         var trueValue: Value = ValueFactory.newBoolean(true)
@@ -31,16 +32,10 @@ public class MessageTestImmutable {
     public func test2(): Unit {
         var trueValue: Value = ValueFactory.newBoolean(true)
         var falseValue: Value = ValueFactory.newBoolean(false)
-    
-        let buffer = ByteBuffer()
-        var packer = MessagePacker(buffer)
-
+        var packer = MessagePack.newDefaultBufferPacker()
         trueValue.writeTo(packer)
         falseValue.writeTo(packer)
-
-        println(buffer.bytes())
-        var unpacker = MessageUnpacker(buffer)
-
+        var unpacker = MessagePack.newDefaultUnpacker(packer.toByteArray())
         @Assert(unpacker.unpackBool(), trueValue.asBooleanValue().getBoolean())
         @Assert(unpacker.unpackBool(), falseValue.asBooleanValue().getBoolean())
     }
@@ -49,16 +44,10 @@ public class MessageTestImmutable {
     public func test3(): Unit {
         var trueValue: Value = ValueFactory.newBoolean(true)
         var falseValue: Value = ValueFactory.newBoolean(false)
-    
-        let buffer = ByteBuffer()
-        var packer = MessagePacker(buffer)
-
+        var packer = MessagePack.newDefaultBufferPacker()
         packer.packValue(trueValue)
         packer.packValue(falseValue)
-
-        println(buffer.bytes())
-        var unpacker = MessageUnpacker(buffer)
-
+        var unpacker = MessagePack.newDefaultUnpacker(packer.toByteArray())
         @Assert(unpacker.unpackBool(), trueValue.asBooleanValue().getBoolean())
         @Assert(unpacker.unpackBool(), falseValue.asBooleanValue().getBoolean())
     }
@@ -75,15 +64,10 @@ public class MessageTestImmutable {
     @TestCase
     public func test5(): Unit {
         var value: Value = ValueFactory.newNil()
-        let buffer = ByteBuffer()
-        var packer = MessagePacker(buffer)
-
+        var packer = MessagePack.newDefaultBufferPacker()
         packer.packValue(value)
-
-        println(buffer.bytes())
-        var unpacker = MessageUnpacker(buffer)
+        var unpacker = MessagePack.newDefaultUnpacker(packer.toByteArray())
         unpacker.unpackNull()
-
         @Assert(value.isNilValue(), true)
     }
 
@@ -91,15 +75,10 @@ public class MessageTestImmutable {
     @TestCase
     public func test6(): Unit {
         var value: Value = ValueFactory.newNil()
-        let buffer = ByteBuffer()
-        var packer = MessagePacker(buffer)
-
+        var packer = MessagePack.newDefaultBufferPacker()
         value.writeTo(packer)
-
-        println(buffer.bytes()) // 192
-        var unpacker = MessageUnpacker(buffer)
+        var unpacker = MessagePack.newDefaultUnpacker(packer.toByteArray())
         unpacker.unpackNull()
-
         @Assert(value.isNilValue(), true)
     }
 }

@@ -3,12 +3,15 @@
  */
 package msgpack4cj.core
 
+import std.io.readToEnd
+import std.io.Seekable
+import std.io.InputStream
 import std.io.OutputStream
 import std.binary.BigEndianOrder
 import std.collection.ArrayList
 import std.time.*
 
-public class MessagePacker {
+public open class MessagePacker{
 
     private let output: OutputStream
 
@@ -16,14 +19,10 @@ public class MessagePacker {
 
     private let binarySizeLimit: Int64
 
-    public init(output: OutputStream, config: PackerConfig) {
+    protected init(output: OutputStream, config: PackerConfig) {
         this.output = output
         this.stringSizeLimit = config.getStringSizeLimit()
         this.binarySizeLimit = config.getBinarySizeLimit()
-    }
-
-    public init(output: OutputStream) {
-        this(output, PackerConfig())
     }
 
     @OverflowWrapping

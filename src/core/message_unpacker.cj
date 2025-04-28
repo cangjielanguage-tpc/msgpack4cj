@@ -23,20 +23,12 @@ public class MessageUnpacker {
 
     private var allowReadingBinaryAsString: Bool
 
-    public init(input: InputStream, config: UnpackerConfig) {
+    protected init(input: InputStream, config: UnpackerConfig) {
         this.input = input
         this.stringSizeLimit = config.getStringSizeLimit()
         this.binarySizeLimit = config.getBinarySizeLimit()
         this.allowReadingBinaryAsString = config.getAllowReadingBinaryAsString()
         this.allowReadingStringAsBinary = config.getAllowReadingStringAsBinary()
-    }
-
-    public init(content: Array<Byte>) {
-        this(ByteBuffer(content), UnpackerConfig())
-    }
-
-    public init(input: InputStream) {
-        this(input, UnpackerConfig())
     }
 
     public func nextFlag(): Byte {
