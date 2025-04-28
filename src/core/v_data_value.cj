@@ -4,8 +4,11 @@
 package msgpack4cj.core
 import std.io.ByteBuffer
 import std.collection.Set
+internal import std.collection.List
+internal import std.collection.ArrayList
+internal import std.time.*
 
-public interface Value {
+public interface Value<: Hashable & ToString {
 
     func getValueType(): ValueType
     
@@ -19,7 +22,7 @@ public interface Value {
 
     func isIntValue(): Bool
 
-    func isFloat32Value(): Bool
+    func isFloat64Value(): Bool
 
     func isRawValue(): Bool
 
@@ -43,9 +46,7 @@ public interface Value {
 
     func asIntValue(): IntValue
 
-    func asFloat32Value(): Float32Value
-
-    func asRawValue(): RawValue
+    func asFloat64Value(): Float64Value
 
     func asByteValue(): ByteValue
 
@@ -72,8 +73,6 @@ public interface ByteValue
 {
 }
 
-
-
 public interface BooleanValue<: Value {
 
     func getBoolean(): Bool
@@ -85,7 +84,7 @@ public interface NilValue<: Value
 
 }
 
-public interface Float32Value  <: NumberValue
+public interface Float64Value  <: NumberValue
 {
 }
 
@@ -96,8 +95,9 @@ public interface ExtensionValue <: Value
     func getData(): Array<Byte>
 }
 
-public interface StringValue <: RawValue
+public interface StringValue <: Value
 {
+    func getString(): String
 }
 
 public interface RawValue <: Value
@@ -115,9 +115,9 @@ public interface TimestampValue <: ExtensionValue
 {
     func getEpochSecond(): Int64
 
-    func getNano(): Int32
+    func getNano(): Int64
 
-    func toEpochMillis(): Int64
+    func toDataTime(): DateTime
 }
 
 public interface ArrayValue
@@ -129,14 +129,44 @@ public interface ArrayValue
 
     func iterator(): Iterator<Value>
 
-    func list(): Array<Value>
+    func list(): List<Value>
 }
 
 public interface MapValue <: Value
 {
     func size(): Int64
 
-    func keySet(): Set<Value>
+}
 
-    func getKeyValueArray(): Array<Value>
+public interface NumberValue <: Value
+{
+    func toInt8(): Int8
+
+    func toInt16(): Int16
+
+    func toInt32(): Int32
+
+    func toInt64(): Int64
+
+    func toFloat32(): Float32
+
+    func toFloat64(): Float64
+}
+public interface IntValue <: NumberValue
+{
+    func isInInt8Range(): Bool
+
+    func isInInt16Range(): Bool
+
+    func isInInt32Range(): Bool
+
+    func isInInt64Range(): Bool
+
+    func asInt8(): Int8
+
+    func asInt16(): Int16
+
+    func asInt32(): Int32
+
+    func asInt64(): Int64
 }
