@@ -12,8 +12,6 @@ import std.core.Exception
 
 public open class MessagePackException <: Exception {
 
-    public static let UNREACHABLE: IllegalStateException = IllegalStateException("Cannot reach here")
-
     public init() {
         super()
     }
@@ -22,8 +20,8 @@ public open class MessagePackException <: Exception {
         super(messages)
     }
 
-    public static func UNSUPPORTED(operationName: String): UnsupportedException {
-        return UnsupportedException(operationName)
+    public open func toString(): String {
+        return "MessagePackException: ${message}"
     }
 
 }
@@ -37,6 +35,10 @@ public open class MessageTypeException<: MessagePackException {
 
     public init(message: String) {
         super(message)
+    }
+
+    public open func toString(): String {
+        return "MessageTypeException: ${message}"
     }
 
 }
@@ -61,8 +63,8 @@ public open class MessageIntegerOverflowException<: MessageTypeException {
         return bigInteger
     }
 
-    public override func toString(): String {
-        return "MessageIntegerOverflowException: ${bigInteger.toString()}"
+    public func toString(): String {
+        return "MessageIntegerOverflowException: ${message}"
     }
 }
 
@@ -84,12 +86,20 @@ public open class MessageSizeException<: MessagePackException {
         return size
     }
 
+    public func toString(): String {
+        return "MessageSizeException: ${message}"
+    }
+
 }
 
 public open class MessageFormatException<: MessagePackException {
 
     public init(message: String) {
         super(message)
+    }
+
+    public func toString(): String {
+        return "MessageFormatException: ${message}"
     }
 
 }
