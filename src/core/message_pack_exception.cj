@@ -61,6 +61,9 @@ public open class MessageIntegerOverflowException<: MessageTypeException {
         return bigInteger
     }
 
+    public override func toString(): String {
+        return "MessageIntegerOverflowException: ${bigInteger.toString()}"
+    }
 }
 
 public open class MessageSizeException<: MessagePackException {
