@@ -291,7 +291,7 @@ public class MessageUnpacker {
                 if (u64 >= 1 << 63) {
                     throw MessageIntegerOverflowException(BigInt(u64))
                 }
-                return Int64(64)
+                return Int64(u64)
             case 0xD0 =>
                 return Int64(Int8(readByte()))  //Int8
             case 0xD1 =>

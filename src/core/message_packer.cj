@@ -225,9 +225,9 @@ public open class MessagePacker{
         return this
     }
 
-    public func packMapHeader(value: Int): Unit {
+    public func packMapHeader(value: Int64): Unit {
         if (value < 0) {
-            throw MessageSizeException("Map header must be >= 0", value)
+            throw MessageSizeException("map header must be >= 0", value)
         }
         if (value < 16) {
             writeByte(FIXMAP_MIN + UInt8(value))
@@ -283,7 +283,7 @@ public open class MessagePacker{
 
     public func packArrayHeader(value: Int): Unit {
         if (value < 0) {
-            throw MessageSizeException("Array header must be >= 0", value)
+            throw MessageSizeException("array header must be >= 0", value)
         }
         if (value < 16) {
             writeByte(FIXARR_MIN + UInt8(value))
@@ -335,7 +335,6 @@ public open class MessagePacker{
     private func writeTimestamp32(sec: Int32): Unit {
         output.write(FIXEXT4)
         output.write(EXT_TIMESTAMP)
-
         var dataArray: Array<Byte> = Array<Byte>(4, repeat: 0u8)
         UInt32(sec).writeBigEndian(dataArray)
         output.write(dataArray)
@@ -423,7 +422,7 @@ public open class MessagePacker{
     }
 
     private func writeFloat32(value: Float32): Unit {
-        let tmp = Array<Byte>(84, repeat: 0u8)
+        let tmp = Array<Byte>(4, repeat: 0u8)
         value.writeBigEndian(tmp)
         output.write(FLOAT32)
         output.write(tmp)
