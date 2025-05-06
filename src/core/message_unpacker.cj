@@ -525,7 +525,7 @@ public class MessageUnpacker {
         return unpackTimestamp(ext)
     }
 
-    public func unpackTimestamp(ext: ExtensionTypeHeader): DateTime {
+    private func unpackTimestamp(ext: ExtensionTypeHeader): DateTime {
         if (ext.getType() != EXT_TIMESTAMP) {
             throw unexpectedExtension("Timestamp", Int32(EXT_TIMESTAMP), Int32(ext.getType()))
         }

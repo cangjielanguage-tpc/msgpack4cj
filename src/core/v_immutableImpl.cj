@@ -163,7 +163,6 @@ public class ImmutableInt64ValueImpl <: AbstractImmutableValue & ImmutableIntVal
     }
 
     public override func toInt64(): Int64 {
-        println("sgwe333")
         return value
     }
 
@@ -182,13 +181,11 @@ public class ImmutableInt64ValueImpl <: AbstractImmutableValue & ImmutableIntVal
 
     public override func isInInt16Range(): Bool
     {
-         println("sgwe222")
         return INT16_MIN <= value && value <= INT16_MAX
     }
 
     public override func isInInt32Range(): Bool
     {
-        println("sgwe")
         return INT32_MIN <= value && value <= INT32_MAX
     }
 
@@ -200,7 +197,6 @@ public class ImmutableInt64ValueImpl <: AbstractImmutableValue & ImmutableIntVal
     public override func asInt8(): Int8
     {
         if (!isInInt8Range()) {
-            println(3333)
             throw MessageIntegerOverflowException(BigInt(value))
         }
         return Int8(value)

@@ -3,8 +3,10 @@
 </div>
 <p align="center">
 <img alt="" src="https://img.shields.io/badge/release-v0.0.1-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/build-pass-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjc-v0.59.6-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjcov-88.90%25-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/project-open-brightgreen" style="display: inline-block;" />
 </p>
 
 
@@ -12,9 +14,18 @@
 
 msgpack4cj是基于[msgpack](https://github.com/msgpack/msgpack)序列化协议的仓颉实现。旨在为仓颉应用提供高效、紧凑的二进制数据交换格式。支持快速的数据序列化和反序列化操作，适用于需要高性能和低开销的数据传输场景。
 
+**特性**：
+
+- 🚀 基础数据类型的序列化和反序列化操作
+
+- 🌍 序列化DataModle实现类
+
+- 💪 构建​不可变值的封装类
+
+
 ## <img alt="" src="./doc/readme-image/readme-icon-framework.png" style="display: inline-block;" width=3%/> 2 架构
 
-### 2.1 项目结构
+### 项目结构
 
 ```
 ├── doc
@@ -22,16 +33,34 @@ msgpack4cj是基于[msgpack](https://github.com/msgpack/msgpack)序列化协议�
 └── src
     ├── core 		  //msgpack序列化核心类库
     └── serialization //序列化DataModle实现类
+└── test
+    ├── HLT
+    └── LLT
 ├── CHANGELOG
-├── cjpm.lock
 ├── cjpm.toml
 ├── LICENSE
 ├── README.md
+├── README.OpenSource
 ```
 
-### 2.2 接口说明
+- `doc`  文档目录，用于存API接口文档
+- `src`  是库源码目录
+- `test` 存放 HLT 测试用例、LLT 自测用例
 
-#### 1. MessagePacker
+### 接口说明
+
+主要核心类和全局函数说明,详情见 [API](./doc/feature_api.md)
+
+## <img alt="" src="./doc/readme-image/readme-icon-compile.png" style="display: inline-block;" width=3%/> 使用说明
+
+### 编译
+    ```
+    cjpm build
+    ```
+
+### 功能示例
+
+#### MessagePacker
 
 用于将仓颉数据类型以msgpack格式序列化的类。
 
@@ -50,7 +79,7 @@ public class MessagePacker {
 }
 ````
 
-#### 2. MessageUnpacker
+#### MessageUnpacker
 
 用于反序列化msgpack数据的类。
 
@@ -69,7 +98,7 @@ public class MessageUnpacker {
 }
 ```
 
-#### 3. ToMessagePack
+#### ToMessagePack
 
 用于将msgpack格式的二进制数据和DataModel对象之间相互转换的接口。
 
@@ -85,7 +114,7 @@ public interface ToMessagePack {
 
 ## <img alt="" src="./doc/readme-image/readme-icon-compile.png" style="display: inline-block;" width=3%/> 3 使用说明
 
-#### 1. 序列化/反序列化基本数据类型
+#### 序列化/反序列化基本数据类型
 
 ```cangjie
 import msgpack4cj.core.*
@@ -117,7 +146,7 @@ main(): Unit {
 }
 ```
 
-#### 2. 序列化/反序列化对象
+#### 序列化/反序列化对象
 
 ```cangjie
 import msgpack4cj.serialization.*
@@ -169,6 +198,15 @@ public class Student <: Serializable<Student> {
 
 }
 ```
+
+## 约束与限制
+
+在下述版本验证通过：
+
+    Cangjie Version: 0.59.6
+
+## 开源协议
+本项目基于 [Apache License 2.0](./LICENSE)，请自由的享受和参与开源。
 
 ## <img alt="" src="./doc/readme-image/readme-icon-contribute.png" style="display: inline-block;" width=3%/>4 参与贡献
 

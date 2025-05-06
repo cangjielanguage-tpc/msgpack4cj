@@ -191,7 +191,7 @@ public open class MessagePacker{
         } else if (size < (1 << 32)) {
             writeByteAndUInt32(STR32, UInt32(size))
         } else {
-            throw MessageSizeException("cannot pack a String of size larger than ${UInt32.Max}", size)
+            throw MessageSizeException("cannot pack a String of size larger than ${Int32.Max}", size)
         }
         output.write(value.toArray())
         return this
@@ -236,7 +236,7 @@ public open class MessagePacker{
         } else if (value < (1 << 32)) {
             writeByteAndUInt32(MAP32, UInt32(value))
         } else {
-           throw MessageSizeException("cannot pack a Map of size larger than ${UInt32.Max}", value)
+           throw MessageSizeException("cannot pack a Map of size larger than ${Int32.Max}", value)
         }
     }
 
@@ -292,7 +292,7 @@ public open class MessagePacker{
         } else if (value < 4294967296) {
             writeByteAndUInt32(ARR32, UInt32(value))
         } else {
-            throw MessageSizeException("cannot pack a Array of size larger than ${UInt32.Max}", value)
+            throw MessageSizeException("cannot pack a Array of size larger than ${Int32.Max}", value)
         }
     }
 
@@ -308,7 +308,7 @@ public open class MessagePacker{
         } else if (size < (1 << 32)) {
             writeByteAndUInt32(BIN32, UInt32(size))
         } else {
-            throw MessageSizeException("cannot pack a Binary of size larger than ${UInt32.Max}", value.size)
+            throw MessageSizeException("cannot pack a Binary of size larger than ${Int32.Max}", value.size)
         }
         output.write(value)
     }
@@ -320,6 +320,9 @@ public open class MessagePacker{
 
     @OverflowWrapping
     public func packTimestamp(sec: Int64, nsec: Int64): Unit {
+        if (nsec < 0 || nsec > 999999999 ) {
+            throw MessageFormatException("The nanosecond ${nsec} should be in the range [0, 999999999].")
+        }
         if (sec >> 34 == 0) {
             var data64: Int64 = (nsec << 34) | sec
             if ((data64 & -4294967296) == 0) {
