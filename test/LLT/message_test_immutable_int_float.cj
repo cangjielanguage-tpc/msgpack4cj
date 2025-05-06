@@ -81,6 +81,7 @@ public class MessageTestImmutableIntFloat {
         try{
             var s: Int16 = intValue.asIntValue().asInt16()
         } catch (e: Exception){
+            println((e as MessageIntegerOverflowException).getOrThrow().getBigInteger().toString())
             @Assert(e.toString().contains("MessageIntegerOverflowException"),true)
         }
     }

@@ -54,17 +54,12 @@ public open class MessageIntegerOverflowException<: MessageTypeException {
         this.bigInteger = bigInteger
     }
 
-    public init(messages: String, bigInteger: BigInt) {   
-        super(messages)
-        this.bigInteger = bigInteger
-    }
-
     public func getBigInteger(): BigInt {
         return bigInteger
     }
 
     public func toString(): String {
-        return "MessageIntegerOverflowException: ${message}"
+        return "MessageIntegerOverflowException: ${bigInteger}"
     }
 }
 

@@ -19,6 +19,10 @@ public class PackerConfig <: Equal<PackerConfig> & Hashable {
         this.binarySizeLimit = from.binarySizeLimit
     }
 
+    public func clone(): PackerConfig {
+        return PackerConfig(this)
+    }
+
     public func getBufferSize(): Int64 {
         return this.bufferSize
     }

@@ -57,6 +57,13 @@ public class ValueFactory {
         return  ImmutableArrayValueImpl(list.toArray())
     }
 
+    public static func newMap(list: List<Value>): ImmutableMapValue {
+        if (list.isEmpty()) {
+            return ImmutableMapValueImpl.empty()
+        }
+        return  ImmutableMapValueImpl(list.toArray())
+    }
+
     public static func newExtension(dataType: Byte, data: Array<Byte>): ImmutableExtensionValue {
 
         return  ImmutableExtensionValueImpl(dataType, data)

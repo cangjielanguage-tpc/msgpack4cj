@@ -22,6 +22,10 @@ public class UnpackerConfig <: Equal<UnpackerConfig> & Hashable {
         this.allowReadingStringAsBinary = from.allowReadingStringAsBinary
     }
 
+    public func clone(): UnpackerConfig {
+        return UnpackerConfig(this)
+    }
+
     public func getBinarySizeLimit(): Int64 {
         return this.binarySizeLimit
     }
@@ -41,7 +45,7 @@ public class UnpackerConfig <: Equal<UnpackerConfig> & Hashable {
     public func withBinarySizeLimit(limit: Int64): UnpackerConfig {
         let new = UnpackerConfig(this)
         new.binarySizeLimit = limit
-        return this
+        return new
     }
 
     public func withStringSizeLimit(limit: Int64): UnpackerConfig {
