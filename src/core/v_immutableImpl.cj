@@ -552,7 +552,7 @@ public class ImmutableTimestampValueImpl <: AbstractImmutableValue & ImmutableTi
 
     public override func toJson(): String {
 
-        return "\"" + toDataTime().toString() + "\""
+        return toDataTime().toString()
     }
 
     public override func toString(): String {
@@ -757,7 +757,7 @@ public class ImmutableMapValueImpl <: AbstractImmutableValue & ImmutableMapValue
         var sb: StringBuilder = StringBuilder()
         sb.append("{")
         sb.append(kvs[0].toJson())
-        for (i in 2..kvs.size: 2) {
+        for (i in 0..kvs.size: 2) {
             sb.append(",")
             sb.append(kvs[i].toJson())
             sb.append(":")
