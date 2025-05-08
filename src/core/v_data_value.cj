@@ -18,13 +18,9 @@ public interface Value<: Hashable & ToString {
 
     func isBooleanValue(): Bool
 
-    func isNumberValue(): Bool
-
     func isIntValue(): Bool
 
     func isFloat64Value(): Bool
-
-    func isRawValue(): Bool
 
     func isByteValue(): Bool
 

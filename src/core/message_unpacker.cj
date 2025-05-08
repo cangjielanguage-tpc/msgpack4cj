@@ -10,7 +10,8 @@ import std.binary.BigEndianOrder
 import std.time.DateTime
 
 public class MessageUnpacker {
-    
+    private static let formatTable: Array<MessageFormat> = Array<MessageFormat>(256, repeat: MessageFormat.NEGFIXINT(ValueType.INT))
+
     private let input: InputStream
 
     private var current: ?Byte = None
@@ -22,6 +23,103 @@ public class MessageUnpacker {
     private var allowReadingStringAsBinary: Bool
 
     private var allowReadingBinaryAsString: Bool
+
+    static init() {
+        for (b in 0..0xFF) {
+            var mf: MessageFormat = toMessageFormat(UInt8(b))
+            if (b == 0xc2) {
+                
+            }
+            formatTable[b] = mf
+        }
+    }
+
+    static func toMessageFormat(b: Byte): MessageFormat {
+            if (b == 0xc2) {
+                
+            }
+        if (isPosFixInt(b)) {
+            return MessageFormat.POSFIXINT(ValueType.INT)
+        }
+
+        if (isNegFixInt(b)) {
+            return MessageFormat.NEGFIXINT(ValueType.INT)
+        }
+
+        if (isFixStr(b)) {
+            return MessageFormat.FIXSTR(ValueType.STRING)
+        }
+
+        if (isFixedArray(b)) {
+            return MessageFormat.FIXARRAY(ValueType.ARRAY)
+        }
+
+        if (isFixedMap(b)) {
+            return MessageFormat.FIXMAP(ValueType.MAP)
+        }
+        match (b) {
+            case 0xc0 => return MessageFormat.NIL(ValueType.NONE)
+            case 0xc2 => return MessageFormat.BOOLEAN(ValueType.BOOL)
+            case 0xc3 => return MessageFormat.BOOLEAN(ValueType.BOOL)
+            case 0xc4 => return MessageFormat.BIN8(ValueType.BYTE)
+            case 0xc5 => return MessageFormat.BIN16(ValueType.BYTE)
+            case 0xc6 => return MessageFormat.BIN32(ValueType.BYTE)
+            case 0xc7 => return MessageFormat.EXT8(ValueType.EXTENSION)
+            case 0xc8 => return MessageFormat.EXT16(ValueType.EXTENSION)
+            case 0xc9 => return MessageFormat.EXT32(ValueType.EXTENSION)
+            case 0xca => return MessageFormat.FLOAT32(ValueType.FLOAT)
+            case 0xcb => return MessageFormat.FLOAT64(ValueType.FLOAT)
+            case 0xcc => return MessageFormat.UINT8(ValueType.INT)
+            case 0xcd => return MessageFormat.UINT16(ValueType.INT)
+            case 0xce => return MessageFormat.UINT32(ValueType.INT)
+            case 0xcf => return MessageFormat.UINT64(ValueType.INT)
+
+            case 0xd0 => return MessageFormat.INT8(ValueType.INT)
+            case 0xd1 => return MessageFormat.INT16(ValueType.INT)
+            case 0xd2 => return MessageFormat.INT32(ValueType.INT)
+            case 0xd3 => return MessageFormat.INT64(ValueType.INT)
+            
+            case 0xd4 => return MessageFormat.FIXEXT1(ValueType.EXTENSION)
+            case 0xd5 => return MessageFormat.FIXEXT2(ValueType.EXTENSION)
+            case 0xd6 => return MessageFormat.FIXEXT4(ValueType.EXTENSION)
+            case 0xd7 => return MessageFormat.FIXEXT8(ValueType.EXTENSION)
+            case 0xd8 => return MessageFormat.FIXEXT16(ValueType.EXTENSION)
+
+            case 0xd9 => return MessageFormat.STR8(ValueType.STRING)
+            case 0xda => return MessageFormat.STR16(ValueType.STRING)
+            case 0xdb => return MessageFormat.STR32(ValueType.STRING)
+
+            case 0xdc => return MessageFormat.ARRAY16(ValueType.ARRAY)
+            case 0xdd => return MessageFormat.ARRAY32(ValueType.ARRAY)
+
+            case 0xde => return MessageFormat.MAP16(ValueType.MAP)
+            case 0xdf => return MessageFormat.MAP32(ValueType.MAP)
+            case _ => return MessageFormat.NEVER_USED
+        }
+    }
+
+    static func isPosFixInt(b: Byte): Bool {
+        return (b & POSFIXINT_MASK) == 0
+    }
+
+    static func isNegFixInt(b: Byte): Bool {
+        return (b & NEGFIXINT_PREFIX) == NEGFIXINT_PREFIX
+    }
+
+    static func isFixStr(b: Byte): Bool
+    {
+        return (b & 0xe0) == FIXSTR_PREFIX
+    }
+
+    static func isFixedArray(b: Byte): Bool
+    {
+        return (b & 0xf0) == FIXARRAY_PREFIX
+    }
+
+    static func isFixedMap(b: Byte): Bool
+    {
+        return (b & 0xf0) == FIXMAP_PREFIX
+    }
 
     protected init(input: InputStream, config: UnpackerConfig) {
         this.input = input
@@ -53,6 +151,45 @@ public class MessageUnpacker {
         if (flag == NULL) {
         } else {
             throw unexpected("Null", flag)
+        }
+    }
+
+    public func unpackValue(): ImmutableValue {
+        let flag = current ?? nextFlag()
+        current = flag
+        let messageFormat: MessageFormat = formatTable[Int64(flag & 0xFF)]
+        match (messageFormat.getValueType()) {
+            case ValueType.NONE =>
+                return ValueFactory.newNil()
+            case ValueType.BOOL => 
+                return ValueFactory.newBoolean(unpackBool())
+            case ValueType.INT => 
+                return ValueFactory.newInt(unpackInt64())
+            case ValueType.FLOAT => 
+                return ValueFactory.newFloat64(unpackFloat64())
+            case ValueType.STRING => 
+                var len = readRawStringHeader()
+                if(len > stringSizeLimit) {
+                    throw MessageSizeException("cannot unpack a String of size larger than ${stringSizeLimit}, ${len}", len)
+                }
+                return ValueFactory.newString(String.fromUtf8(readBytes(len)))
+            case ValueType.ARRAY => 
+                var len = unpackArrayHeader()
+                var arrayList: ArrayList<Value> = ArrayList<Value>()
+                for (i in 0..len) {
+                    var v = unpackValue()
+                    arrayList.add(v)
+                }
+                return ValueFactory.newArray(arrayList)
+            case ValueType.MAP => 
+                var len = unpackMapHeader()
+                var arrayList: ArrayList<Value> = ArrayList<Value>()
+                for (i in 0..len*2) {
+                    var v = unpackValue()
+                    arrayList.add(v)
+                }
+                return ValueFactory.newMap(arrayList)
+            case _ => throw MessagePackException("Unknown value type")
         }
     }
 

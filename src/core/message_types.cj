@@ -5,6 +5,9 @@ package msgpack4cj.core
 
 //map
 protected const FIXMAP_MIN: Byte = 0x80
+protected const POSFIXINT_MASK: Byte = 0x80
+protected const FIXMAP_PREFIX: Byte = 0x80
+
 
 protected const FIXMAP_MAX: Byte = 0x8F
 
@@ -14,6 +17,7 @@ protected const MAP32: Byte = 0xDF
 
 //arr
 protected const FIXARR_MIN: Byte = 0x90
+protected const FIXARRAY_PREFIX: Byte = 0x90
 
 protected const FIXARR_MAX: Byte = 0x9F
 
@@ -23,6 +27,7 @@ protected const ARR32: Byte = 0xDD
 
 //str
 protected const FIXSTR_MIN: Byte = 0xA0
+protected const FIXSTR_PREFIX: Byte = 0xA0
 
 protected const FIXSTR_MAX: Byte = 0xBF
 
@@ -38,6 +43,7 @@ protected const POSITIVE_FIXINT_MIN: Byte = 0x00
 protected const POSITIVE_FIXINT_MAX: Byte = 0x7F
 
 protected const NEGATIVE_FIXINT_MIN: Byte = 0xE0
+protected const NEGFIXINT_PREFIX: Byte = 0xE0
 
 protected const NEGATIVE_FIXINT_MAX: Byte = 0xFF
 

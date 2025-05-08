@@ -13,20 +13,12 @@ abstract class AbstractImmutableValue <: ImmutableValue
         return getValueType().isBooleanType()
     }
 
-    public override func isNumberValue(): Bool {
-        return getValueType().isNumberType()
-    }
-
     public override func isIntValue(): Bool {
         return getValueType().isIntType()
     }
 
     public override func isFloat64Value(): Bool {
         return getValueType().isFloat64Type()
-    }
-
-    public override func isRawValue(): Bool {
-        return getValueType().isRawType()
     }
 
     public override func isByteValue(): Bool {

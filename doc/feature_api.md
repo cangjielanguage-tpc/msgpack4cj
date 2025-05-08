@@ -6,21 +6,6 @@ msgpack4cj是基于[msgpack](https://github.com/msgpack/msgpack)序列化协议�
 
 ## 1 二进制与仓颉数据类型的序列化和反序列化功能
 
-前置条件：NA 
-
-场景：
-
-1. 二进制与仓颉数据类型的序列化
-2. 二进制与仓颉数据类型的反序列化
-
-约束：NA
-
-依赖：NA
-
-性能： NA
-
-可靠性： NA
-
 ### 1.1 仓颉数据类型的序列化
 
 仓颉数据类型的序列化
@@ -31,14 +16,7 @@ msgpack4cj是基于[msgpack](https://github.com/msgpack/msgpack)序列化协议�
 public class MessagePacker {
 
     /**
-     * 初始化
-     *
-     * 参数 output - OutputStream 输出流，将数据写入到流中保存
-     */
-    public init(output: OutputStream): Unit
-
-    /**
-     * 初始化
+     * 序列化Int8类型数据
      *
      * 参数 value - Int8 序列化Int8类型数据
      */
@@ -134,14 +112,14 @@ public class MessagePacker {
     public func packNull(): Unit
 
     /**
-     * 序列化MapHeader类型数据
+     * 序列化Map对象的标识头
      *
      * 参数 value - Int 数据
      */
     public func packMapHeader(value: Int): Unit
 
     /**
-     * 序列化ArrayHeader类型数据
+     * 序列化Array对象的标识头
      *
      * 参数 value - Int 数据
      */
@@ -155,12 +133,19 @@ public class MessagePacker {
     public func packTimestamp(dateTime: DateTime): Unit
 
     /**
-     * 序列化DateTime类型数据 - 时间时区为UTC
+     * 序列化DateTime类型数据 - 时间时区为UTC 
      *
-     * 参数 sec - Int64 秒数据
-     * 参数 nsec - Int64 纳秒数据
+     * 参数 sec - Int64 秒数据 距离1970年至今的秒
+     * 参数 nsec - Int64 纳秒数据 
      */
     public func packTimestamp(sec: Int64, nsec: Int64): Unit
+
+    /**
+     * 序列化Value 对象
+     *
+     * 参数 value - Value 对象
+     */
+    public func packValue(value: Value)
 
     /**
      * 序列化Byte数组类型数据
@@ -178,7 +163,7 @@ public class MessagePacker {
     public func packExtensionTypeHeader(extType: Byte, payloadLen: Int32)
 
     /**
-     * 序列化 拓展类型 Byte数组类型数据
+     * 序列化 map， array， 拓展类型的负载部分
      *
      * 参数 value - Array<Byte> 数据
      */
@@ -198,20 +183,6 @@ public class MessagePacker {
 public class MessageUnpacker {
 
     /**
-     * 初始化
-     *
-     * 参数 content - Array<Byte> 用Array接收反序列化后的数据信息
-     */
-    public init(content: Array<Byte>): Unit
-
-    /**
-     * 初始化
-     *
-     * 参数 input - InputStream 用流接收反序列化后的数据信息
-     */
-    public init(input: InputStream): Unit
-
-    /**
      * 读取流中数据,反序列为 Bool
      *
      * 返回值 Bool - 反序列化后数据
@@ -222,6 +193,13 @@ public class MessageUnpacker {
      * 读取流中数据,反序列为 Null
      */
     public func unpackNull(): Unit
+
+    /**
+     * 反序列化 value 对象
+     *
+     * 返回值 ImmutableValue - ImmutableValue 对象
+     */
+    public func unpackValue(): ImmutableValue
 
     /**
      * 读取流中数据,反序列为 Float64
@@ -238,14 +216,14 @@ public class MessageUnpacker {
     public func unpackString(): String
 
     /**
-     * 读取流中数据,反序列为 Int
+     * 反序列化Map对象的标识头
      *
      * 返回值 Int - 反序列化后数据
      */
     public func unpackMapHeader(): Int
 
     /**
-     * 读取流中数据,反序列为 Int
+     * 反序列化Array对象的标识头
      *
      * 返回值 Int - 反序列化后数据
      */
@@ -381,105 +359,105 @@ extend DataModel <: ToMessagePack{
 public class ValueFactory {
 
     /**
-     * 构建None实现类
+     * 构建None封装类
      *
-     * 返回值 ImmutableNilValue - 不可变None实现类
+     * 返回值 ImmutableNilValue - 不可变None封装类
      */
     public static func newNil(): ImmutableNilValue
 
     /**
-     * 构建Bool实现类
+     * 构建Bool封装类
      *
      * 参数 value - Bool
-     * 返回值 ImmutableBooleanValue - 不可变Bool实现类
+     * 返回值 ImmutableBooleanValue - 不可变Bool封装类
      */
     public static func newBoolean(value: Bool): ImmutableBooleanValue
 
     /**
-     * 构建Int8实现类
+     * 构建Int8封装类
      *
      * 参数 value - Int8
-     * 返回值 ImmutableIntValue - 不可变Int8实现类
+     * 返回值 ImmutableIntValue - 不可变Int8封装类
      */
     public static func newInt(v: Int8): ImmutableIntValue
 
     /**
-     * 构建Int16实现类
+     * 构建Int16封装类
      *
      * 参数 value - Int16
-     * 返回值 ImmutableIntValue - 不可变Int16实现类
+     * 返回值 ImmutableIntValue - 不可变Int16封装类
      */
     public static func newInt(v: Int16): ImmutableIntValue
 
     /**
-     * 构建Int32类
+     * 构建Int32封装类
      *
      * 参数 value - Int32
-     * 返回值 ImmutableIntValue - 不可变Int32现类
+     * 返回值 ImmutableIntValue - 不可变Int32封装类
      */
     public static func newInt(v: Int32): ImmutableIntValue
     
     /**
-     * 构建Float32
+     * 构建Float32封装类
      *
      * 参数 value - Float32
-     * 返回值 ImmutableFloatValue - 不可变Float32类
+     * 返回值 ImmutableFloatValue - 不可变Float32封装类
      */
     public static func newFloat32(v: Float32): ImmutableFloatValue
 
     /**
-     * 构建Float64
+     * 构建Float64封装类
      *
      * 参数 value - Float64
-     * 返回值 ImmutableFloatValue - 不可变Float64类
+     * 返回值 ImmutableFloatValue - 不可变Float64封装类
      */
     public static func newFloat64(v: Float64): ImmutableFloatValue
 
     /**
-     * 构建不可变String类
+     * 构建不可变String封装类
      *
      * 参数 value - String
-     * 返回值 ImmutableStringValue - 不可变String类
+     * 返回值 ImmutableStringValue - 不可变String封装类
      */
     public static func newString(value: String): ImmutableStringValue
 
     /**
-     * 构建不可变Array类
+     * 构建不可变Array封装类
      *
      * 参数 value - Array<Value>
-     * 返回值 ImmutableArrayValueImpl - 不可变Array类
+     * 返回值 ImmutableArrayValueImpl - 不可变Array封装类
      */
     public static func newArray(list: Array<Value>): ImmutableArrayValueImpl
 
     /**
-     * 构建不可变Map类
+     * 构建不可变Map封装类
      *
      * 参数 value - String
-     * 返回值 ImmutableMapValue - 不可变Map类
+     * 返回值 ImmutableMapValue - 不可变Map封装类
      */
     public static func newMap(value: Map<Value>): ImmutableMapValue
 
     /**
-     * 构建不可变Extension类
+     * 构建不可变Extension封装类
      *
      * 参数 type - 类型
      * 参数 data - data数据
-     * 返回值 ImmutableExtensionValue - 不可变Extension类
+     * 返回值 ImmutableExtensionValue - 不可变Extension封装类
      */
     public static func newExtension(type: Byte, data: Array<Byte>): ImmutableExtensionValue
 
     /**
-     * 构建不可变Timestamp类
+     * 构建不可变Timestamp封装类
      *
      * 参数 epochSecond - 秒
      * 参数 nanoAdjustment - 纳秒
-     * 返回值 ImmutableTimestampValue - 不可变Timestamp类
+     * 返回值 ImmutableTimestampValue - 不可变Timestamp封装类
      */
     public static func newTimestamp(epochSecond: Int64, nanoAdjustment: Int32): ImmutableTimestampValue
 }
 ````
 
-#### 1.4.2 封装实现类
+#### 1.4.2 封装类
 
 ##### 1.4.2.1 ImmutableNilValueImpl
 
@@ -554,7 +532,7 @@ public class ImmutableNilValueImpl <: AbstractImmutableValue & ImmutableNilValue
 ##### 1.4.2.2 ImmutableBooleanValueImpl
 
 ````cangjie
-public class ImmutableBooleanValueImpl <: AbstractImmutableValue & ImmutableBooleanValue & Hashable & ToString
+public class ImmutableBooleanValueImpl <: AbstractImmutableValue & ImmutableBooleanValue & Hashable & ToString{
 
     /**
      * 值类型
@@ -625,7 +603,7 @@ public class ImmutableBooleanValueImpl <: AbstractImmutableValue & ImmutableBool
 ##### 1.4.2.3 ImmutableInt64ValueImpl
 
 ````cangjie
-public class ImmutableInt64ValueImpl <: AbstractImmutableValue & ImmutableIntValue & Hashable & ToString
+public class ImmutableInt64ValueImpl <: AbstractImmutableValue & ImmutableIntValue & Hashable & ToString{
 
     /**
      * 值类型
@@ -761,7 +739,7 @@ public class ImmutableInt64ValueImpl <: AbstractImmutableValue & ImmutableIntVal
 ##### 1.4.2.4 ImmutableExtensionValueImpl
 
 ````cangjie
-public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableExtensionValue & Hashable & ToString
+public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableExtensionValue & Hashable & ToString{
 
     /**
      * 初始化
@@ -835,7 +813,7 @@ public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableEx
 ##### 1.4.2.5 ImmutableStringValueImpl
 
 ````cangjie
-public class ImmutableStringValueImpl <: AbstractImmutableValue & ImmutableStringValue & Hashable & ToString
+public class ImmutableStringValueImpl <: AbstractImmutableValue & ImmutableStringValue & Hashable & ToString{
 
     /**
      * 初始化
@@ -907,7 +885,7 @@ public class ImmutableStringValueImpl <: AbstractImmutableValue & ImmutableStrin
 ##### 1.4.2.6 ImmutableTimestampValueImpl
 
 ````cangjie
-public class ImmutableTimestampValueImpl <: AbstractImmutableValue & ImmutableExtensionValue & Hashable & ToString
+public class ImmutableTimestampValueImpl <: AbstractImmutableValue & ImmutableExtensionValue & Hashable & ToString{
 
     /**
      * 初始化
@@ -979,7 +957,7 @@ public class ImmutableTimestampValueImpl <: AbstractImmutableValue & ImmutableEx
 ##### 1.4.2.7 ImmutableArrayValueImpl
 
 ````cangjie
-public class ImmutableArrayValueImpl <: AbstractImmutableValue & ImmutableArrayValue & Hashable & ToString
+public class ImmutableArrayValueImpl <: AbstractImmutableValue & ImmutableArrayValue & Hashable & ToString {
 
     /**
      * 初始化
@@ -1049,7 +1027,7 @@ public class ImmutableArrayValueImpl <: AbstractImmutableValue & ImmutableArrayV
 ##### 1.4.2.8 ImmutableMapValueImpl
 
 ````cangjie
-public class ImmutableMapValueImpl <: AbstractImmutableValue & ImmutableMapValue & Hashable & ToString
+public class ImmutableMapValueImpl <: AbstractImmutableValue & ImmutableMapValue & Hashable & ToString {
 
     /**
      * 值类型
@@ -1130,110 +1108,3 @@ extend DataModel <: ToMessagePack{
     public static func fromMessagePack(data: Array<Byte>): DataModel
 }
 ````
-
-
-
-## 2 工具类
-
-数据类型type枚举值
-
-```cangjie
-public class messagetypes {
-
-    protected const FIXMAP_MIN: Byte = 0x80
-
-    protected const FIXMAP_MAX: Byte = 0x8F
-
-    protected const MAP16: Byte = 0xDE
-
-    protected const MAP32: Byte = 0xDF
-
-    protected const FIXARR_MIN: Byte = 0x90
-
-    protected const FIXARR_MAX: Byte = 0x9F
-
-    protected const ARR16: Byte = 0xDC
-
-    protected const ARR32: Byte = 0xDD
-
-    protected const FIXSTR_MIN: Byte = 0xA0
-
-    protected const FIXSTR_MAX: Byte = 0xBF
-
-    protected const STR8: Byte = 0xD9
-
-    protected const STR16: Byte = 0xDA
-
-    protected const STR32: Byte = 0xDB
-
-    protected const POSITIVE_FIXINT_MIN: Byte = 0x00
-
-    protected const POSITIVE_FIXINT_MAX: Byte = 0x7F
-
-    protected const NEGATIVE_FIXINT_MIN: Byte = 0xE0
-
-    protected const NEGATIVE_FIXINT_MAX: Byte = 0xFF
-
-    protected const UINT8: Byte = 0xCC
-
-    protected const UINT16: Byte = 0xCD
-
-    protected const UINT32: Byte = 0xCE
-
-    protected const UINT64: Byte = 0xCF
-
-    protected const INT8: Byte = 0xD0
-
-    protected const INT16: Byte = 0xD1
-
-    protected const INT32: Byte = 0xD2
-
-    protected const INT64: Byte = 0xD3
-
-    protected const NULL: Byte = 0xC0
-
-    protected const FALSE: Byte = 0xC2
-
-    protected const TRUE: Byte = 0xC3
-
-    protected const FLOAT32: Byte = 0xCA
-
-    protected const FLOAT64: Byte = 0xCB
-
-    protected const BIN8: Byte = 0xC4
-
-    protected const BIN16: Byte = 0xC5
-
-    protected const BIN32: Byte = 0xC6
-
-    protected const FIXEXT1: Byte = 0xD4
-    protected const FIXEXT2: Byte = 0xD5
-    protected const FIXEXT4: Byte = 0xD6
-    protected const FIXEXT8: Byte = 0xD7
-    protected const FIXEXT16: Byte = 0xD8
-
-    protected const EXT_TIMESTAMP: Byte = 255
-
-    protected const EXT8: Byte = 0xC7
-    protected const EXT16: Byte = 0xC8
-    protected const EXT32: Byte = 0xC9
-
-    protected func isFixInt(flag: Byte): Bool {
-        return flag >= NEGATIVE_FIXINT_MIN || flag <= POSITIVE_FIXINT_MAX
-    }
-
-}
-
-public enum ValueType {
-    | NONE(Bool, Bool)
-    | BOOL(Bool, Bool)
-    | INT(Bool, Bool)
-    | FLOAT32(Bool, Bool)
-    | STRING(Bool, Bool)
-    | BYTE(Bool, Bool)
-    | ARRAY(Bool, Bool)
-    | MAP(Bool, Bool)
-    | EXTENSION(Bool, Bool)
-
-}
-```
