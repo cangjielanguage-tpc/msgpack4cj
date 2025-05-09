@@ -23,7 +23,7 @@ public class ImmutableNilValueImpl <: AbstractImmutableValue & ImmutableNilValue
     }
 
     public override func getValueType(): ValueType {
-        return ValueType.NONE(false, false)
+        return ValueType.NONE
     }
 
     public override func asNilValue(): ImmutableNilValue {
@@ -68,7 +68,7 @@ public class ImmutableBooleanValueImpl <: AbstractImmutableValue & ImmutableBool
     }
 
     public override func getValueType(): ValueType {
-        return ValueType.BOOL(false, false)
+        return ValueType.BOOL
     }
 
     public override func asBooleanValue(): ImmutableBooleanValue {
@@ -132,7 +132,7 @@ public class ImmutableInt64ValueImpl <: AbstractImmutableValue & ImmutableIntVal
     }
 
     public override func getValueType(): ValueType {
-        return ValueType.INT(true, false)
+        return ValueType.INT
     }
 
     public override func immutableValue(): ImmutableIntValue {
@@ -271,7 +271,7 @@ public class ImmutableFloat64ValueImpl <: AbstractImmutableValue & ImmutableFloa
     }
 
     public override func getValueType(): ValueType {
-        return ValueType.FLOAT(true, false)
+        return ValueType.FLOAT
     }
 
     public override func immutableValue(): ImmutableFloat64ValueImpl {
@@ -354,7 +354,7 @@ public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableEx
     }
 
     public override func getValueType(): ValueType {
-        return ValueType.EXTENSION(false, false)
+        return ValueType.EXTENSION
     }
 
     public override func immutableValue(): ImmutableExtensionValue {
@@ -375,6 +375,7 @@ public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableEx
 
     public override func writeTo(packer: MessagePacker): Unit {
         packer.packExtensionTypeHeader(dataType, Int32(data.size))
+        packer.writePayload(data)
     }
 
     public override func equals(v: Value): Bool {
@@ -429,7 +430,7 @@ public class ImmutableStringValueImpl <: AbstractImmutableValue & ImmutableStrin
     }
 
     public override func getValueType(): ValueType {
-        return ValueType.STRING(false, true)
+        return ValueType.STRING
     }
 
     public override func immutableValue(): ImmutableStringValue {
@@ -457,12 +458,14 @@ public class ImmutableStringValueImpl <: AbstractImmutableValue & ImmutableStrin
         return string == stringValue.getString()
     }
 
+    @OverflowWrapping
     public override func hashCode(): Int64 {
         var hash: Int64 =  1
         var data: Array<Byte>
         unsafe {
             data = string.rawData()
         }
+
         for (e in data) {
             hash = 31 * hash + Int64(e)
         }
@@ -498,7 +501,7 @@ public class ImmutableTimestampValueImpl <: AbstractImmutableValue & ImmutableTi
     }
 
     public override func getValueType(): ValueType {
-        return ValueType.EXTENSION(false, true)
+        return ValueType.EXTENSION
     }
 
     public override func immutableValue(): ImmutableTimestampValue {
@@ -576,7 +579,7 @@ public class ImmutableArrayValueImpl <: AbstractImmutableValue & ImmutableArrayV
 
 
     public override func getValueType(): ValueType {
-        return ValueType.ARRAY(false, false)
+        return ValueType.ARRAY
     }
 
     public override func immutableValue(): ImmutableArrayValue {
@@ -660,7 +663,7 @@ public class ImmutableArrayValueImpl <: AbstractImmutableValue & ImmutableArrayV
         var sb: StringBuilder = StringBuilder()
         sb.append("[")
         sb.append(array[0].toJson())
-        for (i in 0..array.size) {
+        for (i in 1..array.size) {
             sb.append(",")
             sb.append(array[i].toJson())
         }
@@ -707,7 +710,7 @@ public class ImmutableMapValueImpl <: AbstractImmutableValue & ImmutableMapValue
     }
 
     public override func getValueType(): ValueType {
-        return ValueType.MAP(false, false)
+        return ValueType.MAP
     }
 
     public override func immutableValue(): ImmutableMapValue {
@@ -742,7 +745,7 @@ public class ImmutableMapValueImpl <: AbstractImmutableValue & ImmutableMapValue
     }
 
     public override func hashCode(): Int64 {
-        var h = 1
+        var h = 0
         for (i in 0..kvs.size: 2) {
             h = h + kvs[i].hashCode() ^ kvs[i + 1].hashCode()
         }

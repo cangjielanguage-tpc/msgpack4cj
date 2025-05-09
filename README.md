@@ -5,7 +5,7 @@
 <img alt="" src="https://img.shields.io/badge/release-v0.0.1-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/build-pass-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjc-v0.59.6-brightgreen" style="display: inline-block;" />
-<img alt="" src="https://img.shields.io/badge/cjcov-88.90%25-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/cjcov-90.6%25-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/project-open-brightgreen" style="display: inline-block;" />
 </p>
 
@@ -30,6 +30,7 @@ msgpack4cj是基于[msgpack](https://github.com/msgpack/msgpack)序列化协议�
 ```
 ├── doc
     └── readme-image
+    └── feature_api.md
 └── src
     ├── core 		  //msgpack序列化核心类库
     └── serialization //序列化DataModle实现类
@@ -51,7 +52,7 @@ msgpack4cj是基于[msgpack](https://github.com/msgpack/msgpack)序列化协议�
 
 主要核心类和全局函数说明,详情见 [API](./doc/feature_api.md)
 
-## <img alt="" src="./doc/readme-image/readme-icon-compile.png" style="display: inline-block;" width=3%/> 使用说明
+### <img alt="" src="./doc/readme-image/readme-icon-compile.png" style="display: inline-block;" width=3%/> 3 使用说明
 
 ### 编译
     ```
@@ -59,60 +60,6 @@ msgpack4cj是基于[msgpack](https://github.com/msgpack/msgpack)序列化协议�
     ```
 
 ### 功能示例
-
-#### MessagePacker
-
-用于将仓颉数据类型以msgpack格式序列化的类。
-
-````cangjie
-public class MessagePacker {
-
-	public func packInt(): Unit
-	
-	public func packBool(): Unit
-	
-	public func packNull(): Unit
-	
-	public func packMapHeader(): Unit
-	
-	//...省略其他方法
-}
-````
-
-#### MessageUnpacker
-
-用于反序列化msgpack数据的类。
-
-```cangjie
-public class MessageUnpacker {
-
-	public func unpackInt(): Int
-	
-	public func unpackBool(): Bool
-	
-	public func unpackNull(): Unit
-	
-	public func unpackMapHeader(): unit
-	
-	//...省略其他方法
-}
-```
-
-#### ToMessagePack
-
-用于将msgpack格式的二进制数据和DataModel对象之间相互转换的接口。
-
-```cangjie
-public interface ToMessagePack {
-
-    static func fromMsgPack(data: Array<Byte>): DataModel
-  
-    func toMessagePack(): Array<Byte>
-
-}
-```
-
-## <img alt="" src="./doc/readme-image/readme-icon-compile.png" style="display: inline-block;" width=3%/> 3 使用说明
 
 #### 序列化/反序列化基本数据类型
 
