@@ -4,9 +4,9 @@
 
 package msgpack4cj.core
 
-import std.io.ByteBuffer
 import std.io.OutputStream
 import std.io.InputStream
+internal import std.io.ByteArrayStream
 
 public class MessagePack {
 
@@ -35,7 +35,7 @@ public class MessagePack {
     }
 
     public static func newBufferPacker(config: PackerConfig): MessageBufferPacker {
-        return MessageBufferPacker(ByteBuffer(config.getBufferSize()), config)
+        return MessageBufferPacker(ByteArrayStream(config.getBufferSize()), config)
     }
 
     public static func newUnpacker(input: InputStream, config: UnpackerConfig): MessageUnpacker {
@@ -43,7 +43,9 @@ public class MessagePack {
     }
 
     public static func newUnpacker(content: Array<Byte>, config: UnpackerConfig): MessageUnpacker {
-        return MessageUnpacker(ByteBuffer(content), config)
+        var byteArrayStream = ByteArrayStream()
+        byteArrayStream.write(content)
+        return MessageUnpacker(byteArrayStream, config)
     }
 
 }

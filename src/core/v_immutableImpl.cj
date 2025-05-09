@@ -5,7 +5,6 @@ package msgpack4cj.core
 
 import std.math.numeric.*
 import std.io.InputStream
-import std.io.ByteBuffer
 import std.binary.BigEndianOrder
 import std.time.DateTime
 import std.core.StringBuilder
@@ -607,7 +606,7 @@ public class ImmutableArrayValueImpl <: AbstractImmutableValue & ImmutableArrayV
         return Ite(array)
     }
 
-    public override func list(): List<Value> {
+    public override func list(): ArrayList<Value> {
         return ArrayList<Value>(array)
     }
 

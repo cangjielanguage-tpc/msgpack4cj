@@ -4,20 +4,18 @@
 
 package msgpack4cj.core
 
-import std.io.ByteBuffer
-import std.io.readToEnd
 
  public class MessageBufferPacker <: MessagePacker {
 
-    private let buffer: ByteBuffer
+    private let buffer: ByteArrayStream
 
-    protected init(buffer: ByteBuffer, config: PackerConfig) {
+    protected init(buffer: ByteArrayStream, config: PackerConfig) {
         super(buffer, config)
         this.buffer = buffer
     }
 
     public func toByteArray(): Array<Byte> {
-        return readToEnd(buffer)
+        return buffer.readToEnd()
     }
 
  }

@@ -3,7 +3,7 @@
  */
 package msgpack4cj.core
 
-abstract class AbstractImmutableValue <: ImmutableValue
+public abstract class AbstractImmutableValue <: ImmutableValue
 {
     public override func isNilValue(): Bool {
         return getValueType().isNilType()
@@ -138,7 +138,7 @@ public interface ImmutableArrayValue
 {
     func iterator(): Iterator<Value>
 
-    func list(): List<Value>
+    func list(): ArrayList<Value>
 }
 
 public interface ImmutableByteValue

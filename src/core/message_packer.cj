@@ -3,7 +3,6 @@
  */
 package msgpack4cj.core
 
-import std.io.readToEnd
 import std.io.Seekable
 import std.io.InputStream
 import std.io.OutputStream
@@ -264,13 +263,13 @@ public open class MessagePacker{
             }
         } else if (payloadLen < (1 << 16)) {
             output.write(EXT16)
-            var sizeArray = Array<Byte>(2, repeat: 0u8)
+            var sizeArray = Array<Byte>(2, item: 0u8)
             UInt16(payloadLen).writeBigEndian(sizeArray)
             output.write(sizeArray)
             output.write(extType)
         } else {
             output.write(EXT32)
-            var sizeArray = Array<Byte>(4, repeat: 0u8)
+            var sizeArray = Array<Byte>(4, item: 0u8)
             UInt32(payloadLen).writeBigEndian(sizeArray)
             output.write(sizeArray)
             output.write(extType)
@@ -338,7 +337,7 @@ public open class MessagePacker{
     private func writeTimestamp32(sec: Int32): Unit {
         output.write(FIXEXT4)
         output.write(EXT_TIMESTAMP)
-        var dataArray: Array<Byte> = Array<Byte>(4, repeat: 0u8)
+        var dataArray: Array<Byte> = Array<Byte>(4, item: 0u8)
         UInt32(sec).writeBigEndian(dataArray)
         output.write(dataArray)
     }
@@ -348,7 +347,7 @@ public open class MessagePacker{
         output.write(FIXEXT8)
         output.write(EXT_TIMESTAMP)
 
-        var dataArray: Array<Byte> = Array<Byte>(8, repeat: 0u8)
+        var dataArray: Array<Byte> = Array<Byte>(8, item: 0u8)
         UInt64(data64).writeBigEndian(dataArray)
         output.write(dataArray)
     }
@@ -359,80 +358,80 @@ public open class MessagePacker{
         output.write(12)
         output.write(EXT_TIMESTAMP)
 
-        var dataArray: Array<Byte> = Array<Byte>(4, repeat: 0u8)
+        var dataArray: Array<Byte> = Array<Byte>(4, item: 0u8)
         UInt32(nsec).writeBigEndian(dataArray)
         output.write(dataArray)
 
-        var dataArrayInt64: Array<Byte> = Array<Byte>(8, repeat: 0u8)
+        var dataArrayInt64: Array<Byte> = Array<Byte>(8, item: 0u8)
         UInt64(sec).writeBigEndian(dataArrayInt64)
         output.write(dataArrayInt64)
     }
 
     private func writeByteAndInt8(byte: Byte, value: Int8): Unit {
-        let temp = Array<Byte>(1, repeat: 0)
+        let temp = Array<Byte>(1, item: 0)
         value.writeBigEndian(temp)
         output.write(byte)
         output.write(temp)
     }
 
     private func writeByteAndInt16(byte: Byte, value: Int16): Unit {
-        let temp = Array<Byte>(2, repeat: 0)
+        let temp = Array<Byte>(2, item: 0)
         value.writeBigEndian(temp)
         output.write(byte)
         output.write(temp)
     }
 
     private func writeByteAndInt32(byte: Byte, value: Int32): Unit {
-        let temp = Array<Byte>(4, repeat: 0)
+        let temp = Array<Byte>(4, item: 0)
         value.writeBigEndian(temp)
         output.write(byte)
         output.write(temp)
     }
 
     private func writeByteAndInt64(byte: Byte, value: Int64): Unit {
-        let temp = Array<Byte>(8, repeat: 0)
+        let temp = Array<Byte>(8, item: 0)
         value.writeBigEndian(temp)
         output.write(byte)
         output.write(temp)
     }
 
     private func writeByteAndUInt8(byte: Byte, value: UInt8): Unit {
-        let temp = Array<Byte>(1, repeat: 0)
+        let temp = Array<Byte>(1, item: 0)
         value.writeBigEndian(temp)
         output.write(byte)
         output.write(temp)
     }
 
     private func writeByteAndUInt16(byte: Byte, value: UInt16): Unit {
-        let temp = Array<Byte>(2, repeat: 0)
+        let temp = Array<Byte>(2, item: 0)
         value.writeBigEndian(temp)
         output.write(byte)
         output.write(temp)
     }
 
     private func writeByteAndUInt32(byte: Byte, value: UInt32): Unit {
-        let temp = Array<Byte>(4, repeat: 0)
+        let temp = Array<Byte>(4, item: 0)
         value.writeBigEndian(temp)
         output.write(byte)
         output.write(temp)
     }
 
     private func writeByteAndUInt64(byte: Byte, value: UInt64): Unit {
-        let temp = Array<Byte>(8, repeat: 0)
+        let temp = Array<Byte>(8, item: 0)
         value.writeBigEndian(temp)
         output.write(byte)
         output.write(temp)
     }
 
     private func writeFloat32(value: Float32): Unit {
-        let tmp = Array<Byte>(4, repeat: 0u8)
+        let tmp = Array<Byte>(4, item: 0u8)
         value.writeBigEndian(tmp)
         output.write(FLOAT32)
         output.write(tmp)
     }
 
     private func writeFloat64(value: Float64): Unit {
-        let tmp = Array<Byte>(8, repeat: 0u8)
+        let tmp = Array<Byte>(8, item: 0u8)
         value.writeBigEndian(tmp)
         output.write(FLOAT64)
         output.write(tmp)

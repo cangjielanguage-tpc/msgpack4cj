@@ -2,9 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2025-2025. All rights reserved.
  */
 package msgpack4cj.core
-import std.io.ByteBuffer
 import std.collection.Set
-internal import std.collection.List
 internal import std.collection.ArrayList
 internal import std.time.*
 
@@ -100,7 +98,7 @@ public interface RawValue <: Value
 {
     func asByteArray(): Array<Byte>
 
-    func asByteBuffer(): ByteBuffer
+    func asByteBuffer(): ByteArrayStream
 
     func asString(): String
 
@@ -125,7 +123,7 @@ public interface ArrayValue
 
     func iterator(): Iterator<Value>
 
-    func list(): List<Value>
+    func list(): ArrayList<Value>
 }
 
 public interface MapValue <: Value

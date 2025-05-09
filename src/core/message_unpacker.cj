@@ -5,12 +5,11 @@ package msgpack4cj.core
 
 import std.math.numeric.*
 import std.io.InputStream
-import std.io.ByteBuffer
 import std.binary.BigEndianOrder
 import std.time.DateTime
 
 public class MessageUnpacker {
-    private static let formatTable: Array<MessageFormat> = Array<MessageFormat>(256, repeat: MessageFormat.NEGFIXINT(ValueType.INT))
+    private static let formatTable: Array<MessageFormat> = Array<MessageFormat>(256, item: MessageFormat.NEGFIXINT(ValueType.INT))
 
     private let input: InputStream
 
@@ -178,7 +177,7 @@ public class MessageUnpacker {
                 var arrayList: ArrayList<Value> = ArrayList<Value>()
                 for (i in 0..len) {
                     var v = unpackValue()
-                    arrayList.add(v)
+                    arrayList.append(v)
                 }
                 return ValueFactory.newArray(arrayList)
             case ValueType.MAP => 
@@ -186,7 +185,7 @@ public class MessageUnpacker {
                 var arrayList: ArrayList<Value> = ArrayList<Value>()
                 for (i in 0..len*2) {
                     var v = unpackValue()
-                    arrayList.add(v)
+                    arrayList.append(v)
                 }
                 return ValueFactory.newMap(arrayList)
             case _ => throw MessagePackException("Unknown value type")
@@ -928,7 +927,7 @@ public class MessageUnpacker {
     }
 
     private func readByte(): Byte {
-        let temp = Array<Byte>(1, repeat: 0)
+        let temp = Array<Byte>(1, item: 0)
         if (input.read(temp) != 1) {
             throw IllegalMemoryException()
         }
@@ -936,7 +935,7 @@ public class MessageUnpacker {
     }
 
     private func readBytes(n: Int): Array<Byte> {
-        let temp = Array<Byte>(n, repeat: 0)
+        let temp = Array<Byte>(n, item: 0)
         if (input.read(temp) != n) {
             throw IllegalMemoryException()
         }
@@ -944,7 +943,7 @@ public class MessageUnpacker {
     }
 
     public func readPayload(n: Int): Array<Byte> {
-        let temp = Array<Byte>(n, repeat: 0)
+        let temp = Array<Byte>(n, item: 0)
         if (input.read(temp) != n) {
             throw IllegalMemoryException()
         }

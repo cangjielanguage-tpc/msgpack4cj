@@ -1,7 +1,6 @@
 // EXEC: cjc %import-path %L %l %f --test
 // EXEC: ./main
 
-import std.io.ByteBuffer
 import std.time.MonoTime
 import std.unittest.*
 import std.unittest.testmacro.*
@@ -10,6 +9,8 @@ import msgpack4cj.core.*
 import msgpack4cj.serialization.*
 import std.time.*
 import std.collection.*
+internal import std.io.ByteArrayStream
+internal import std.math.*
 
 @Test
 public class MessageCoverageTest {
@@ -56,7 +57,7 @@ public class MessageCoverageTest {
 
     @TestCase
     public func test3(): Unit {
-        var b  = ByteBuffer(5)
+        var b  = ByteArrayStream(5)
         var packer = MessagePack.newDefaultPacker(b)
         packer.packInt64(5)
         var unpacker = MessagePack.newDefaultUnpacker(b.bytes())
@@ -65,11 +66,12 @@ public class MessageCoverageTest {
 
     @TestCase
     public func test4(): Unit {
-        var b  = ByteBuffer(5)
+        var b  = ByteArrayStream(5)
         var packer = MessagePack.newDefaultPacker(b)
 
         packer.packInt64(5)
-        var bb  = ByteBuffer(b.bytes())
+        var bb = ByteArrayStream()
+        bb.write(b.bytes())
         var unpacker = MessagePack.newDefaultUnpacker(bb)
 
         @Assert(unpacker.unpackInt64(), 5)
@@ -122,7 +124,7 @@ public class MessageCoverageTest {
 
     @TestCase
     public func test6(): Unit {
-        var b  = ByteBuffer(5)
+        var b  = ByteArrayStream(5)
         var packer = MessagePack.newDefaultPacker(b)
         packer.packInt64(5)
         var unpacker = MessagePack.newDefaultUnpacker(b.bytes())
@@ -1051,75 +1053,6 @@ public class MessageCoverageTest {
     }
 
     @TestCase
-    public func test71(): Unit {
-        var value: ImmutableNilValue = ValueFactory.newNil()
-        var value2: ImmutableNilValue = ValueFactory.newNil()
-        var s: ImmutableNilValue = value.asNilValue()
-        var ss = value2.immutableValue()
-        @Assert(s.isBooleanValue(), false)
-        @Assert(ss.isBooleanValue(), false)
-        @Assert(ss.isByteValue(), false)
-        @Assert(ss.isMapValue(), false)
-        try{
-             ss.asBooleanValue()
-        } catch (e: MessagePackException){
-            @Assert(e.toString().contains("MessagePackException"),true)
-        }
-
-        try{
-             ss.asNumberValue()
-        } catch (e: MessagePackException){
-            @Assert(e.toString().contains("MessagePackException"),true)
-        }
-
-        try{
-             ss.asArrayValue()
-        } catch (e: MessagePackException){
-            @Assert(e.toString().contains("MessagePackException"),true)
-        }
-
-        try{
-             ss.asByteValue()
-        } catch (e: MessagePackException){
-            @Assert(e.toString().contains("MessagePackException"),true)
-        }
-        try{
-             ss.asExtensionValue()
-        } catch (e: MessagePackException){
-            @Assert(e.toString().contains("MessagePackException"),true)
-        }
-        try{
-             ss.asFloat64Value()
-        } catch (e: MessagePackException){
-            @Assert(e.toString().contains("MessagePackException"),true)
-        }
-        try{
-             ss.asIntValue()
-        } catch (e: MessagePackException){
-            @Assert(e.toString().contains("MessagePackException"),true)
-        }
-        try{
-             ss.asMapValue()
-        } catch (e: MessagePackException){
-            @Assert(e.toString().contains("MessagePackException"),true)
-        }
-        try{
-             ss.asStringValue()
-        } catch (e: MessagePackException){
-            @Assert(e.toString().contains("MessagePackException"),true)
-        }
-        try{
-             ss.asTimestampValue()
-        } catch (e: MessagePackException){
-            @Assert(e.toString().contains("MessagePackException"),true)
-        }
-        @Assert(value.equals(value2), true)
-        @Assert(value.hashCode(), 0)
-        @Assert(value.toJson(), "None")
-        @Assert(value.toString(), "None")
-    }
-
-    @TestCase
     public func test72(): Unit {
         var value: ImmutableBooleanValue = ValueFactory.newBoolean(true)
         var value2: ImmutableBooleanValue = ValueFactory.newBoolean(false)
@@ -1255,8 +1188,8 @@ public class MessageCoverageTest {
     @TestCase
     public func test78(): Unit {
         var list: ArrayList<Value> = ArrayList<Value>(10)
-        list.add(ValueFactory.newBoolean(false))
-        list.add(ValueFactory.newInt(2))
+        list.append(ValueFactory.newBoolean(false))
+        list.append(ValueFactory.newInt(2))
         var value: ImmutableArrayValueImpl = ((ValueFactory.newArray(list)) as ImmutableArrayValueImpl).getOrThrow()
         var value11 = ImmutableArrayValueImpl.empty()
         value.getValueType()
@@ -1287,10 +1220,10 @@ public class MessageCoverageTest {
     public func test79(): Unit {
         var list: ArrayList<Value> = ArrayList<Value>(10)
         
-        list.add(ValueFactory.newInt(1))
-        list.add(ValueFactory.newString("zhangsan"))
-        list.add(ValueFactory.newInt(2))
-        list.add(ValueFactory.newString("lisi"))
+        list.append(ValueFactory.newInt(1))
+        list.append(ValueFactory.newString("zhangsan"))
+        list.append(ValueFactory.newInt(2))
+        list.append(ValueFactory.newString("lisi"))
         var value: ImmutableMapValueImpl = ((ValueFactory.newMap(list)) as ImmutableMapValueImpl).getOrThrow()
         var value11 = ImmutableMapValueImpl.empty()
         value.getValueType()

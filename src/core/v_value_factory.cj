@@ -50,14 +50,14 @@ public class ValueFactory {
         return  ImmutableStringValueImpl(v)
     }
 
-    public static func newArray(list: List<Value>): ImmutableArrayValue {
+    public static func newArray(list: Collection<Value>): ImmutableArrayValue {
         if (list.isEmpty()) {
             return ImmutableArrayValueImpl.empty()
         }
         return  ImmutableArrayValueImpl(list.toArray())
     }
 
-    public static func newMap(list: List<Value>): ImmutableMapValue {
+    public static func newMap(list: Collection<Value>): ImmutableMapValue {
         if (list.isEmpty()) {
             return ImmutableMapValueImpl.empty()
         }

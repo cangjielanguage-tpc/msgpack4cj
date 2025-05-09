@@ -3,8 +3,6 @@
  */
 package msgpack4cj.core
 
-import std.io.ByteBuffer
-import std.io.readToEnd
 import std.math.numeric.BigInt
 import std.binary.BigEndianOrder
 import std.collection.ArrayList

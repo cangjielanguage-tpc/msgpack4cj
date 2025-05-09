@@ -8,13 +8,9 @@ import serialization.serialization.{DataModel, DataModelStruct, field, Serializa
 import msgpack4cj.core.*
 import msgpack4cj.serialization.*
 
-import std.io.ByteBuffer
-import std.io.readToEnd
 import std.binary.BigEndianOrder
 import std.collection.ArrayList
-import std.collection.List
 import std.time.*
-import std.io.copy
 
 
 @Test
@@ -102,8 +98,8 @@ public class MessageTestImmutableUnpackValue {
     @TestCase
     public func test10(): Unit {
         var list: ArrayList<Value> = ArrayList<Value>(10)
-        list.add(ValueFactory.newBoolean(false))
-        list.add(ValueFactory.newInt(50))
+        list.append(ValueFactory.newBoolean(false))
+        list.append(ValueFactory.newInt(50))
      
         var intValue: ImmutableArrayValue = ValueFactory.newArray(list)
 
@@ -118,8 +114,8 @@ public class MessageTestImmutableUnpackValue {
         @Assert(isValue, true)
 
         if (isValue) {
-            var i: ImmutableArrayValue = immutableValue.asArrayValue()
-            var list: List<Value> = i.list()
+            var i = immutableValue.asArrayValue()
+            var list: ArrayList<Value> = i.list()
             for (v in list) {
                 if (v.isBooleanValue()) {
                     var data = v.asBooleanValue().getBoolean()
@@ -138,10 +134,10 @@ public class MessageTestImmutableUnpackValue {
     public func test11(): Unit {
         var list: ArrayList<Value> = ArrayList<Value>(10)
         
-        list.add(ValueFactory.newInt(1))
-        list.add(ValueFactory.newString("zhangsan"))
-        list.add(ValueFactory.newInt(2))
-        list.add(ValueFactory.newString("lisi"))
+        list.append(ValueFactory.newInt(1))
+        list.append(ValueFactory.newString("zhangsan"))
+        list.append(ValueFactory.newInt(2))
+        list.append(ValueFactory.newString("lisi"))
      
         var intValue: ImmutableMapValue = ValueFactory.newMap(list)
 

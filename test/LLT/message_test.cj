@@ -6,7 +6,6 @@ import std.unittest.testmacro.*
 import encoding.json.{ToJson, JsonValue}
 import encoding.hex.toHexString
 import serialization.serialization.{Serializable, DataModel, DataModelStruct, field}
-import std.deriving.Derive
 import std.time.MonoTime
 import msgpack4cj.core.*
 import msgpack4cj.serialization.*
@@ -58,11 +57,9 @@ public class MainTest {
         //序列化
         var instance = Abc()
         var data = instance.serialize().toMessagePack()
-        println(data)
     
         //反序列化
         var de = Abc.deserialize(DataModel.fromMessagePack(data))
-        println(de)
         return 0
     }
 
@@ -131,7 +128,6 @@ class Entity <: Serializable<Entity> {
 
 
 /* 通过实现 Serializable 接口，来实现对自定义类型的序列化和反序列化功能 */
-@Derive[ToString]
 class Abc <: Serializable<Abc> {
     //DataModelString
     var name: String = "坤坤"
@@ -182,7 +178,6 @@ class Abc <: Serializable<Abc> {
     }
 }
 
-@Derive[ToString]
 class Location <: Serializable<Location> {
     var time: Int64 = 123
     var heheh: Rune = 'T'

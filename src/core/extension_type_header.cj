@@ -3,11 +3,10 @@
  */
 package msgpack4cj.core
 
-import std.io.ByteBuffer
-import std.io.readToEnd
 import std.binary.BigEndianOrder
 import std.collection.ArrayList
 import std.core.Exception
+internal import std.math.*
 
 public class ExtensionTypeHeader<: Hashable & ToString {
     var typeHeader: Byte

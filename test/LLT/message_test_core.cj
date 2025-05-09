@@ -1,7 +1,7 @@
 // EXEC: cjc %import-path %L %l %f --test
 // EXEC: ./main
 
-import std.io.ByteBuffer
+
 import std.time.MonoTime
 import std.unittest.*
 import std.unittest.testmacro.*
