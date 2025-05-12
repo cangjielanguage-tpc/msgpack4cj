@@ -153,6 +153,13 @@ public class MessageUnpacker {
         }
     }
 
+    public func getType(): MessageFormat {
+        let flag = current ?? nextFlag()
+        current = flag
+        let messageFormat: MessageFormat = formatTable[Int64(flag & 0xFF)]
+        return messageFormat
+    }
+
     public func unpackValue(): ImmutableValue {
         let flag = current ?? nextFlag()
         current = flag
