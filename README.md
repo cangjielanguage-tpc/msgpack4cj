@@ -69,7 +69,7 @@ import serialization.serialization.*
 
 main(): Unit {
     //序列化
-    let packer = MessagePacker()
+    let packer = MessagePack.newDefaultBufferPacker()
     packer.packMapHeader(3)
     packer.packString("name")
     packer.packString("yesokim")
@@ -80,7 +80,7 @@ main(): Unit {
     packer.packString("code")
     let data = packer.toByteArray()
     //反序列化
-    let unpacker = MessageUnpacker(data)
+    let unpacker = MessagePack.newDefaultUnpacker(packer.toByteArray())
     let mapSize = unpacker.unpackMapHeader()
     let key1 = unpacker.unpackString()
     let name = unpacker.unpackString()
