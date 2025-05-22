@@ -9,10 +9,9 @@ import std.io.ByteBuffer
 import std.binary.BigEndianOrder
 import std.time.DateTime
 
-public class MessageUnpacker {
-    private static let formatTable: Array<MessageFormat> = Array<MessageFormat>(256, repeat: MessageFormat.NEGFIXINT(ValueType.INT))
+public abstract class MessageUnpacker {
 
-    private let input: InputStream
+    private static let formatTable: Array<MessageFormat> = Array<MessageFormat>(256, repeat: MessageFormat.NEGFIXINT(ValueType.INT))
 
     private var current: ?Byte = None
 
@@ -121,8 +120,7 @@ public class MessageUnpacker {
         return (b & 0xf0) == FIXMAP_PREFIX
     }
 
-    protected init(input: InputStream, config: UnpackerConfig) {
-        this.input = input
+    protected init(config: UnpackerConfig) {
         this.stringSizeLimit = config.getStringSizeLimit()
         this.binarySizeLimit = config.getBinarySizeLimit()
         this.allowReadingBinaryAsString = config.getAllowReadingBinaryAsString()
@@ -927,28 +925,12 @@ public class MessageUnpacker {
         return Float64.readBigEndian(readBytes(8))
     }
 
-    private func readByte(): Byte {
-        let temp = Array<Byte>(1, repeat: 0)
-        if (input.read(temp) != 1) {
-            throw IllegalMemoryException()
-        }
-        return temp[0]
-    }
+    protected func readByte(): Byte 
 
-    private func readBytes(n: Int): Array<Byte> {
-        let temp = Array<Byte>(n, repeat: 0)
-        if (input.read(temp) != n) {
-            throw IllegalMemoryException()
-        }
-        return temp
-    }
+    protected func readBytes(n: Int): Array<Byte> 
 
     public func readPayload(n: Int): Array<Byte> {
-        let temp = Array<Byte>(n, repeat: 0)
-        if (input.read(temp) != n) {
-            throw IllegalMemoryException()
-        }
-        return temp
+        return readBytes(n)
     }
 
     private static func overflowU32Size(u32: Int32): MessageSizeException {
@@ -960,4 +942,56 @@ public class MessageUnpacker {
         let message = "Expected ${expected}, but got ${flag}"
         return MessagePackException(message)
     }
+}
+
+protected class CommonUnpacker <: MessageUnpacker {
+
+    private let input: InputStream
+
+    protected init(input: InputStream, config: UnpackerConfig) {
+        super(config)
+        this.input = input
+    }
+
+    protected func readByte(): Byte {
+        let temp = Array<Byte>(1, repeat: 0)
+        if (input.read(temp) != 1) {
+            throw IllegalMemoryException()
+        }
+        return temp[0]
+    }
+
+    protected func readBytes(n: Int): Array<Byte> {
+        let temp = Array<Byte>(n, repeat: 0)
+        if (input.read(temp) != n) {
+            throw IllegalMemoryException()
+        }
+        return temp
+    }
+
+}
+
+protected class ArrayUnpacker <: MessageUnpacker {
+
+    private let content: Array<Byte>
+
+    private var position: Int64 = 0
+
+    protected init(content: Array<Byte>, config: UnpackerConfig) {
+        super(config)
+        this.content = content
+    }
+
+    protected func readByte(): Byte {
+        let slice = content.slice(position, 1)
+        position ++
+        return slice[0]
+    }
+
+    protected func readBytes(n: Int): Array<Byte> {
+        let slice = content.slice(position, n)
+        position += n
+        return slice
+    }
+
 }

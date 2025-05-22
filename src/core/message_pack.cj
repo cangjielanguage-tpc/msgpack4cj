@@ -39,11 +39,11 @@ public class MessagePack {
     }
 
     public static func newUnpacker(input: InputStream, config: UnpackerConfig): MessageUnpacker {
-        return MessageUnpacker(input, config)
+        return CommonUnpacker(input, config)
     }
 
     public static func newUnpacker(content: Array<Byte>, config: UnpackerConfig): MessageUnpacker {
-        return MessageUnpacker(ByteBuffer(content), config)
+        return ArrayUnpacker(content, config)
     }
 
 }
