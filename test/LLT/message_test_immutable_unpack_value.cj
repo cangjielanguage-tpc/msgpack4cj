@@ -4,7 +4,6 @@
 import std.time.MonoTime
 import std.unittest.*
 import std.unittest.testmacro.*
-import serialization.serialization.{DataModel, DataModelStruct, field, Serializable}
 import msgpack4cj.core.*
 import msgpack4cj.serialization.*
 

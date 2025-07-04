@@ -4,7 +4,8 @@
 package msgpack4cj.serialization
 
 import msgpack4cj.core.*
-import serialization.serialization.DataModelBool
+internal import stdx.encoding.json.*
+internal import stdx.serialization.serialization.*
 
 
 extend DataModelBool {

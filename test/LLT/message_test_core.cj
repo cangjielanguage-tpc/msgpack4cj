@@ -5,7 +5,8 @@ import std.io.ByteBuffer
 import std.time.MonoTime
 import std.unittest.*
 import std.unittest.testmacro.*
-import serialization.serialization.{DataModel, DataModelStruct, field, Serializable}
+internal import stdx.encoding.json.*
+internal import stdx.serialization.serialization.*
 import msgpack4cj.core.*
 import msgpack4cj.serialization.*
 

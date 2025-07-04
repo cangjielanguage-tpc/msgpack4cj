@@ -4,7 +4,6 @@
 package msgpack4cj.serialization
 
 import msgpack4cj.core.*
-import serialization.serialization.DataModelNull
 
 
 extend DataModelNull {

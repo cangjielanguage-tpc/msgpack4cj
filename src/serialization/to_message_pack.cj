@@ -3,7 +3,6 @@
  */
 package msgpack4cj.serialization
 
-import serialization.serialization.DataModel
 
 /*
 * 基于messagepack协议的序列化接口
