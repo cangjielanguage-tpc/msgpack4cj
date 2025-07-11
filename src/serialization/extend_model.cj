@@ -6,7 +6,6 @@ package msgpack4cj.serialization
 import std.io.readToEnd
 import std.io.ByteBuffer
 import msgpack4cj.core.*
-import serialization.serialization.*
 
 extend DataModel <: ToMessagePack {
     

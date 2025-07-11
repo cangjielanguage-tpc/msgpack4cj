@@ -2,9 +2,9 @@
 <h1>msgpack4cj</h1>
 </div>
 <p align="center">
-<img alt="" src="https://img.shields.io/badge/release-v0.0.1-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/release-v1.0.1-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/build-pass-brightgreen" style="display: inline-block;" />
-<img alt="" src="https://img.shields.io/badge/cjc-v0.59.6-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/cjc-v1.0.0-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjcov-90.6%25-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/project-open-brightgreen" style="display: inline-block;" />
 </p>
@@ -65,7 +65,8 @@ msgpack4cj是基于[msgpack](https://github.com/msgpack/msgpack)序列化协议�
 
 ```cangjie
 import msgpack4cj.core.*
-import serialization.serialization.*
+internal import stdx.encoding.json.*
+internal import stdx.serialization.serialization.*
 
 main(): Unit {
     //序列化
@@ -97,7 +98,8 @@ main(): Unit {
 
 ```cangjie
 import msgpack4cj.serialization.*
-import serialization.serialization.*
+internal import stdx.encoding.json.*
+internal import stdx.serialization.serialization.*
 
 main(): Unit {
     let student = Student("yesokim", 22, ["code"])
@@ -150,7 +152,7 @@ public class Student <: Serializable<Student> {
 
 在下述版本验证通过：
 
-    Cangjie Version: 0.59.6
+    Cangjie Version: 1.0.0
 
 ## 开源协议
 本项目基于 [Apache License 2.0](./LICENSE)，请自由的享受和参与开源。
