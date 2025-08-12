@@ -1,4 +1,0 @@
-version = 0
-
-[requires]
-  msgpack4cj = {git = "https://gitcode.com/Cangjie-TPC/msgpack4cj.git", commitId = "fa9e3071eb9a183edd5a33ab6d644fd8f63f9cf4", tag = "v1.0.2"}
