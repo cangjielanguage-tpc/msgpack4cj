@@ -1,0 +1,11 @@
+[
+    {
+        "Name": "msgpack-java",
+        "License": "Apache License ",
+        "License File": "LICENSE ",
+        "Version Number": "v0.9.9 ",
+        "Owner": "msgpack"
+        "Upstream URL": "https://github.com/msgpack/msgpack-java",
+        "Description": "msgpack序列化工具"
+    }
+]
