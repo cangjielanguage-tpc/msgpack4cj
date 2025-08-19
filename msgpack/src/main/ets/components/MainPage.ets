@@ -82,7 +82,7 @@ export class MessagePacker {
   }
 
   toByteArray(): Array<number> {
-     return this.helper.toByteArray();
+    return this.helper.toByteArray();
   }
 
 

@@ -13,11 +13,6 @@
       path-option = [ "${X86_64_LIBS}", "${X86_64_MACRO_LIBS}", "${CANGJIE_STDX_PATH}/windows_x86_64_llvm/dynamic/stdx" ]
       [target.x86_64-unknown-windows-gnu.bin-dependencies.package-option]
 
-[dependencies]
-  [dependencies.msgpack4cj]
-    git = "https://gitcode.com/Cangjie-TPC/msgpack4cj.git"
-    tag = "v1.0.2"
-
 [package]
   cjc-version = "1.0.0"
   compile-option = "--dy-std "

@@ -4,14 +4,14 @@ import ohos.ark_interop.*
 import ohos.hilog.Hilog
 import ohos.ark_interop.*
 import ohos.ark_interop_macro.Interop
-import msgpack4cj.core.MessageUnpacker
+import msgpack.core.MessageUnpacker
 import stdx.serialization.serialization.DataModel
 import stdx.encoding.json.*
 import stdx.encoding.hex.*
-import msgpack4cj.core.MessagePack
-import msgpack4cj.serialization.ToMessagePack
+import msgpack.core.MessagePack
+import msgpack.serialization.ToMessagePack
 import std.time.DateTime
-import msgpack4cj.core.ExtensionTypeHeader
+import msgpack.core.ExtensionTypeHeader
 
 @Interop[ArkTS]
 public class DataModelTs {
