@@ -137,8 +137,8 @@ struct Index {
 
 在下述版本验证通过：
 
-- DevEco Studio  5.1.0.828SP1
-- Cangjie Plugin Canary  5.1.0.828
+- DevEco Studio  5.1.1.823SP1
+- Cangjie Plugin Canary 5.1.1.823
 
 ## 开源协议
 本项目基于 [Apache License 2.0](./LICENSE)，请自由的享受和参与开源。
