@@ -7,6 +7,7 @@ import { pack_type, pack_array, pack_map, unpack_type, unpack_array, unpack_map,
   pack_extension,
   unpack_extension} from './pack_bool';
 import { hilog } from '@kit.PerformanceAnalysisKit';
+import { router } from '@kit.ArkUI';
 
 @Entry
 @Component
@@ -74,6 +75,9 @@ struct Index {
         hilog.error(0, "", this.message2)
       })
       Text(this.message2)
+      Button("HLT").fontSize($r('app.float.page_text_font_size')).onClick(n => {
+        router.pushUrl({ url: "pages/test_hlt"} )
+      })
     }}
   }
 }
