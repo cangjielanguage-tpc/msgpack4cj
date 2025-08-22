@@ -171,3 +171,37 @@ export function unpack_string(value: Array<number>): string {
     return 'fail'
   }
 }
+export function pack_json(data: string): string {
+  try {
+    let dataModel = new DataModel()
+    let bytes = dataModel.packJson(data)
+    hilog.error(0, 'ss', `${bytes.length}`)
+    return bytes.toString()
+  } catch (e) {
+    hilog.error(0, 'mdebug', `${e}`)
+    return 'fail'
+  }
+}
+
+export function big_pack_json(data: string): Array<number> {
+  try {
+    let dataModel = new DataModel()
+    let bytes = dataModel.packJson(data)
+    hilog.error(0, 'ss', `${bytes.length}`)
+    return bytes
+  } catch (e) {
+    hilog.error(0, 'mdebug', `${e}`)
+    return []
+  }
+}
+
+export function unpack_json(value: Array<number>): string {
+  try {
+    let dataModel = new DataModel()
+
+    return dataModel.unpackJson(value)
+  } catch (e) {
+    hilog.error(0, 'mdebug', `${e}`)
+    return 'fail'
+  }
+}
