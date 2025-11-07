@@ -26,7 +26,7 @@ public open class MessagePacker{
     }
 
     @OverflowWrapping
-    public func packInt8(value: Int8) {
+    public func packInt8(value: Int8): MessagePacker {
         if (value < -(1 << 5)) {
             writeByteAndInt8(INT8, value)
         } else {
@@ -36,7 +36,7 @@ public open class MessagePacker{
     }
 
     @OverflowWrapping
-    public func packInt16(value: Int16) {
+    public func packInt16(value: Int16): MessagePacker {
         if (value < -(1 << 5)) {
             if (value < -(1 << 7)) {
                 writeByteAndInt16(INT16, value)
@@ -56,7 +56,7 @@ public open class MessagePacker{
     }
 
     @OverflowWrapping
-    public func packInt32(value: Int32) {
+    public func packInt32(value: Int32): MessagePacker {
         if (value < -(1 << 5)) {
             if (value < -(1 << 15)) {
                 writeByteAndInt32(INT32, value)
@@ -82,7 +82,7 @@ public open class MessagePacker{
     }
 
     @OverflowWrapping
-    public func packInt64(value: Int64) {
+    public func packInt64(value: Int64): MessagePacker {
         if (value < -(1 << 5)) {
             if (value < -(1 << 15)) {
                 if (value < -(1 << 31)) {
@@ -117,7 +117,7 @@ public open class MessagePacker{
         return this
     }
 
-    public func packUInt8(value: UInt8) {
+    public func packUInt8(value: UInt8): MessagePacker {
         if (value < (1 << 7)) {
             writeByte(value)
         } else {
@@ -126,7 +126,7 @@ public open class MessagePacker{
         return this
     }
 
-    public func packUInt16(value: UInt16) {
+    public func packUInt16(value: UInt16): MessagePacker {
         if (value < (1 << 7)) {
             writeByte(UInt8(value))
         } else {
@@ -139,7 +139,7 @@ public open class MessagePacker{
         return this
     }
 
-    public func packUInt32(value: UInt32) {
+    public func packUInt32(value: UInt32): MessagePacker {
         if (value < (1 << 7)) {
             writeByte(UInt8(value))
         } else {
@@ -156,7 +156,7 @@ public open class MessagePacker{
         return this
     }
 
-    public func packUInt64(value: UInt64) {
+    public func packUInt64(value: UInt64): MessagePacker {
         if (value < (1 << 7)) { 
             writeByte(UInt8(value))
         } else {
@@ -177,7 +177,7 @@ public open class MessagePacker{
         return this
     }
 
-    public func packString(value: String) {
+    public func packString(value: String): MessagePacker {
         let size = value.size
         if(size > binarySizeLimit) {
             throw MessageSizeException("cannot pack a String of size larger than ${stringSizeLimit}", size)
@@ -197,7 +197,7 @@ public open class MessagePacker{
         return this
     }
 
-    public func packBool(value: Bool) {
+    public func packBool(value: Bool): MessagePacker {
         match (value) {
             case true => writeByte(TRUE)
             case false => writeByte(FALSE)
@@ -205,22 +205,22 @@ public open class MessagePacker{
         return this
     }
 
-    public func packValue(value: Value) {
+    public func packValue(value: Value): MessagePacker {
         value.writeTo(this)
         return this
     }
 
-    public func packFloat32(value: Float32) {
+    public func packFloat32(value: Float32): MessagePacker  {
         writeFloat32(value)
         return this
     }
 
-    public func packFloat64(value: Float64) {
+    public func packFloat64(value: Float64): MessagePacker {
         writeFloat64(value)
         return this
     }
 
-    public func packNull() {
+    public func packNull(): MessagePacker {
         writeByte(NULL)
         return this
     }
@@ -241,7 +241,7 @@ public open class MessagePacker{
     }
 
     @OverflowWrapping
-    public func packExtensionTypeHeader(extType: Byte, payloadLen: Int32) {
+    public func packExtensionTypeHeader(extType: Byte, payloadLen: Int32): Unit {
         if (payloadLen < (1 << 8)) {
             if (payloadLen > 0 && (payloadLen & (payloadLen - 1)) == 0) {
                 if (payloadLen == 1) {
@@ -277,7 +277,7 @@ public open class MessagePacker{
         }
     }
 
-    public func writePayload(src: Array<Byte>) {
+    public func writePayload(src: Array<Byte>): Unit {
         output.write(src)
     }
 
