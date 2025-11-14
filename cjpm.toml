@@ -18,7 +18,7 @@
       path-option = [ "${CANGJIE_STDX_PATH}/windows_x86_64_llvm/dynamic/stdx" ]
 
 [package]
-  cjc-version = "1.0.0"
+  cjc-version = "1.0.3"
   compile-option = "-O2"
   description = ""
   link-option = ""
@@ -27,5 +27,5 @@
   override-compile-option = ""
   src-dir = ""
   target-dir = ""
-  version = "1.0.1"
+  version = "1.0.2"
   [package.package-configuration]
