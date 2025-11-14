@@ -28,7 +28,6 @@ extend DataModel <: ToMessagePack {
             case v: DataModelFloat => v.pack(packer)
             case v: DataModelSeq => v.pack(packer)
             case v: DataModelNull => v.pack(packer)
-            //case v: DataModelBinary => return v.toMessage()
             case _ => throw Exception("Unsupport DataModel Type")
         }
     }

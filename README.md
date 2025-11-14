@@ -2,9 +2,9 @@
 <h1>msgpack4cj</h1>
 </div>
 <p align="center">
-<img alt="" src="https://img.shields.io/badge/release-v1.0.1-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/release-v1.0.2-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/build-pass-brightgreen" style="display: inline-block;" />
-<img alt="" src="https://img.shields.io/badge/cjc-v1.0.0-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/cjc-v1.0.3-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjcov-90.6%25-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/project-open-brightgreen" style="display: inline-block;" />
 </p>
@@ -59,7 +59,7 @@ msgpack4cj是基于[msgpack](https://github.com/msgpack/msgpack)序列化协议�
 
 1. 使用脚本编译 
     1. 下载配置[编译脚本](https://gitcode.com/Cangjie-TPC/TPC-Test-Framework.git)
-    2. ciTest build
+    2. ciTest.py build
 2. 使用包管理器编译 
     1. 该三方库依赖stdx，请参考[stdx](https://gitcode.com/Cangjie/Cangjie-STDX#%E4%BD%BF%E7%94%A8%E6%8C%87%E5%AF%BC)文档配置`CANGJIE_STDX_PATH`路径
     2. cjpm build
@@ -157,7 +157,7 @@ public class Student <: Serializable<Student> {
 
 在下述版本验证通过：
 
-    Cangjie Version: 1.0.0
+    Cangjie Version: 1.0.3
 
 ## 开源协议
 本项目基于 [Apache License 2.0](./LICENSE)，请自由的享受和参与开源。
