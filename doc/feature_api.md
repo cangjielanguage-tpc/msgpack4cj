@@ -19,97 +19,111 @@ public class MessagePacker {
      * 序列化Int8类型数据
      *
      * 参数 value - Int8 序列化Int8类型数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packInt8(value: Int8): Unit
+    public func packInt8(value: Int8): MessagePacker
 
     /**
      * 序列化Int16类型数据
      *
      * 参数 value - Int16 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packInt16(value: Int16): Unit
+    public func packInt16(value: Int16): MessagePacker
 
     /**
      * 序列化Int32类型数据
      *
      * 参数 value - Int32 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packInt32(value: Int32): Unit
+    public func packInt32(value: Int32): MessagePacker
 
     /**
      * 序列化Int64类型数据
      *
      * 参数 value - Int64 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packInt64(value: Int64): Unit
+    public func packInt64(value: Int64): MessagePacker
 
     /**
      * 序列化UInt16类型数据
      *
      * 参数 value - UInt16 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packUInt16(value: UInt16): Unit
+    public func packUInt16(value: UInt16): MessagePacker
 
     /**
      * 序列化UInt8类型数据
      *
      * 参数 value - UInt8 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packUInt8(value: UInt8): Unit
+    public func packUInt8(value: UInt8): MessagePacker
 
     /**
      * 序列化UInt32类型数据
      *
      * 参数 value - UInt32 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packUInt32(value: UInt32): Unit
+    public func packUInt32(value: UInt32): MessagePacker
 
     /**
      * 序列化UInt64类型数据
      *
      * 参数 value - UInt64 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packUInt64(value: UInt64): Unit
+    public func packUInt64(value: UInt64): MessagePacker
 
     /**
      * 序列化String类型数据
      *
      * 参数 value - String 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packString(value: String): Unit
+    public func packString(value: String): MessagePacker
 
     /**
      * 序列化Bool类型数据
      *
      * 参数 value - Bool 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packBool(value: Bool): Unit
+    public func packBool(value: Bool): MessagePacker
 
     /**
      * 序列化Float64类型数据
      *
      * 参数 value - Float64 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packFloat64(value: Float64): Unit
+    public func packFloat64(value: Float64): MessagePacker
 
     /**
      * 序列化Float32类型数据
      *
      * 参数 value - Float32 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packFloat32(value: Float32): Unit
+    public func packFloat32(value: Float32): MessagePacker
 
     /**
      * 序列化Float64类型数据
      *
      * 参数 value - Float64 数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packFloat64(value: Float64): Unit
+    public func packFloat64(value: Float64): MessagePacker
 
     /**
      * 序列化Null类型数据
+     * 返回值 MessagePacker - MessagePacker 对象
      */
-    public func packNull(): Unit
+    public func packNull(): MessagePacker
 
     /**
      * 序列化Map对象的标识头
