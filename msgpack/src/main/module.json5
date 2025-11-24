@@ -1,0 +1,9 @@
+{
+  "module": {
+    "name": "msgpack",
+    "type": "har",
+    "deviceTypes": [
+      "default"
+    ]
+  }
+}
