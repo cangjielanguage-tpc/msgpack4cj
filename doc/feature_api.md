@@ -10,6 +10,79 @@ msgpack4cj是基于[msgpack](https://github.com/msgpack/msgpack)序列化协议�
 
 仓颉数据类型的序列化
 
+````cangjie
+public class MessagePack {
+    
+    /**
+     * 构造 MessagePacker 对象
+     *
+     * 参数 output - 输出流
+     * 返回值 MessagePacker - MessagePacker 对象
+     */
+    public static func newDefaultPacker(output: OutputStream): MessagePacker
+    
+    /**
+     * 构造 MessagePacker 对象
+     *
+     * 返回值 MessagePacker - MessagePacker 对象
+     */
+    public static func newDefaultPacker(): MessagePacker
+    
+    /**
+     * 构造 MessageUnpacker 对象
+     *
+     * 参数 input - 输入流
+     * 返回值 MessageUnpacker - MessageUnpacker 对象
+     */
+    public static func newDefaultUnpacker(input: InputStream): MessageUnpacker
+    
+    /**
+     * 构造 MessageUnpacker 对象
+     *
+     * 参数 content - 数组
+     * 返回值 MessageUnpacker - MessageUnpacker 对象
+     */
+    public static func newDefaultUnpacker(content: Array<Byte>): MessageUnpacker
+    
+    /**
+     * 构造 MessagePacker 对象
+     *
+     * 参数 output - 输出流
+     * 参数 config - PackerConfig 对象
+     * 返回值 MessagePacker - MessagePacker 对象
+     */
+    public static func newPacker(output: OutputStream, config: PackerConfig): MessagePacker
+    
+    /**
+     * 构造 MessagePacker 对象
+     *
+     * 参数 config - PackerConfig 对象
+     * 返回值 MessagePacker - MessagePacker 对象
+     */
+    public static func newBufferPacker(config: PackerConfig): MessageBufferPacker
+    
+    /**
+     * 构造 MessageUnpacker 对象
+     *
+     * 参数 input - 输入流
+     * 参数 config - UnpackerConfig 对象
+     * 返回值 MessageUnpacker - MessageUnpacker 对象
+     */
+    public static func newUnpacker(input: InputStream, config: UnpackerConfig): MessageUnpacker
+
+
+    /**
+     * 构造 MessageUnpacker 对象
+     *
+     * 参数 content - 数组
+     * 参数 config - UnpackerConfig 对象
+     * 返回值 MessageUnpacker - MessageUnpacker 对象
+     */
+    public static func newUnpacker(content: Array<Byte>, config: UnpackerConfig): MessageUnpacker
+
+}
+````
+
 #### 1.1.1 MessagePacker
 
 ````cangjie
@@ -112,6 +185,14 @@ public class MessagePacker {
     public func packFloat32(value: Float32): MessagePacker
 
     /**
+     * 序列化Float64类型数据
+     *
+     * 参数 value - Float64 数据
+     * 返回值 MessagePacker - MessagePacker 对象
+     */
+    public func packFloat64(value: Float64): MessagePacker
+
+    /**
      * 序列化Null类型数据
      * 返回值 MessagePacker - MessagePacker 对象
      */
@@ -207,6 +288,13 @@ public class MessageUnpacker {
      */
     public func unpackValue(): ImmutableValue
 
+    /**
+     * 读取流中数据,反序列为 Float32
+     *
+     * 返回值 Float32 - 反序列化后数据
+     */
+    public func unpackFloat32(): Float32
+    
     /**
      * 读取流中数据,反序列为 Float64
      *
@@ -1093,24 +1181,4 @@ public class ImmutableMapValueImpl <: AbstractImmutableValue & ImmutableMapValue
 }
 ````
 
-#### 
-
-````cangjie
-extend DataModel <: ToMessagePack{
-
-    /**
-     * 实现json数据转化成字节数组
-     *
-     * 返回值 Array<Byte> - 序列化后的字节数组
-     */
-    public func toMessagePack(): Array<Byte>
-
-    /**
-     * 实现json数据转化成字节数组
-     *
-     * 参数 data - Array<Byte> 待转化为json的字节数组
-     * 返回值 DataModel - 转化后的DataModel对象
-     */
-    public static func fromMessagePack(data: Array<Byte>): DataModel
-}
-````
+####
