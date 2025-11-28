@@ -379,14 +379,6 @@ public class MessageUnpacker {
     public func unpackTimestamp(): DateTime
 
     /**
-     * 读取流中数据,反序列为 DateTime
-     *
-     * 参数 ext - ExtensionTypeHeader 拓展类型
-     * 返回值 DateTime - 反序列化后数据
-     */
-    public func unpackTimestamp(ext: ExtensionTypeHeader): DateTime
-
-    /**
      * 读取流中数据,获取拓展类型
      *
      * 返回值 ExtensionTypeHeader - 拓展类型
