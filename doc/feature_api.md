@@ -667,7 +667,7 @@ public class ImmutableBooleanValueImpl <: AbstractImmutableValue & ImmutableBool
     /**
      * 获取hashcode
      *
-     * 返回值 Int64- 0
+     * 返回值 Int64- hashCode
      */
     public func hashCode(): Int64
 
@@ -964,7 +964,7 @@ public class ImmutableFloat64ValueImpl <: AbstractImmutableValue & ImmutableIntV
     /**
      * 获取hashcode
      *
-     * 返回值 Int64- Int64 值
+     * 返回值 Int64- hashCode 值
      */
     public func hashCode(): Int64
 
@@ -1050,7 +1050,7 @@ public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableEx
     /**
      * 获取hashcode
      *
-     * 返回值 Int64- 0
+     * 返回值 Int64- hashCode 值
      */
     public func hashCode(): Int64
 
@@ -1130,7 +1130,7 @@ public class ImmutableStringValueImpl <: AbstractImmutableValue & ImmutableStrin
     /**
      * 获取hashcode
      *
-     * 返回值 Int64- 0
+     * 返回值 Int64- hashCode 值
      */
     public func hashCode(): Int64
 
