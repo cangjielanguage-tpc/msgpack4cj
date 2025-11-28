@@ -476,14 +476,6 @@ public class ValueFactory {
     public static func newInt(v: Int32): ImmutableIntValue
 
     /**
-     * 构建Int64封装类
-     *
-     * 参数 v - Int64
-     * 返回值 ImmutableIntValue - 不可变Int64封装类
-     */
-    public static func newInt(v: Int64): ImmutableIntValue
-
-    /**
      * 构建Float32封装类
      *
      * 参数 v - Float32
@@ -691,28 +683,14 @@ public class ImmutableBooleanValueImpl <: AbstractImmutableValue & ImmutableBool
 
 ````cangjie
 public class ImmutableInt64ValueImpl <: AbstractImmutableValue & ImmutableIntValue & Hashable & ToString{
-
-    /**
-     * 构建 Int64 不可变类
-     *
-     * 参数 value - Int64 值
-     */
-    public init(value: Int64): Unit
-
+    
     /**
      * 值类型
      *
      * 返回值 ValueType - ValueType.INT
      */
     public override func getValueType(): ValueType
-
-    /**
-     * 获取 Int 封装类
-     *
-     * 返回值 ImmutableIntValue - Int 封装类
-     */
-    public override func immutableValue(): ImmutableIntValue
-
+    
     /**
      * 获取 Number 封装类
      *
@@ -835,114 +813,7 @@ public class ImmutableInt64ValueImpl <: AbstractImmutableValue & ImmutableIntVal
 }
 ````
 
-
-##### 1.4.2.4 ImmutableFloat64ValueImpl
-
-````cangjie
-public class ImmutableFloat64ValueImpl <: AbstractImmutableValue & ImmutableIntValue & Hashable & ToString{
-
-    /**
-     * 构建 Float64 不可变类
-     *
-     * 参数 value - Float64 值
-     */
-    public init(value: Float64): Unit
-
-    /**
-     * 值类型
-     *
-     * 返回值 ValueType - ValueType.FLOAT
-     */
-    public override func getValueType(): ValueType
-
-    /**
-     * 获取 Float64 封装类
-     *
-     * 返回值 ImmutableFloat64Value - Float64 封装类
-     */
-    public override func asFloat64Value(): ImmutableFloat64Value
-
-    /**
-     * 获取 Int8 值
-     *
-     * 返回值 Int8 - Int8 值
-     */
-    public override func toInt8(): Int8
-    
-    /**
-     * 获取 Int16 值
-     *
-     * 返回值 Int16 - Int16 值
-     */
-    public override func toInt16(): Int16
-    
-    /**
-     * 获取 Int32 值
-     *
-     * 返回值 Int32 - Int32 值
-     */
-    public override func toInt32(): Int32
-    
-    /**
-     * 获取 Int64 值
-     *
-     * 返回值 Int64 - Int64 值
-     */
-    public override func toInt64(): Int64
-
-    /**
-     * 获取 Float32 值
-     *
-     * 返回值 Float32 - Float32 值
-     */
-    public override func toFloat32(): Float32
-
-    /**
-     * 获取 Float64 值
-     *
-     * 返回值 Float64 - Float64 值
-     */
-    public override func toFloat64(): Float64
-
-    /**
-     * 写入 Float64 类型的值
-     *
-     * 参数 packer - 序列化对象
-     */
-    public override func writeTo(packer: MessagePacker): Unit
-
-    /**
-     * 相等
-     *
-     * 参数 v - 比较对象
-     * 返回值 Bool - 比较结果
-     */
-    public override func equals(v: Value): Bool
-
-    /**
-     * 获取hashcode
-     *
-     * 返回值 Int64- hashCode 值
-     */
-    public func hashCode(): Int64
-
-    /**
-     * toJson
-     *
-     * 返回值 String- Float64 转成String
-     */
-    public func toJson(): String
-
-    /**
-     * toString
-     *
-     * 返回值 String- Float64 转成String
-     */
-    public func toString(): String
-}
-````
-
-##### 1.4.2.5 ImmutableExtensionValueImpl
+##### 1.4.2.4 ImmutableExtensionValueImpl
 
 ````cangjie
 public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableExtensionValue & Hashable & ToString{
@@ -967,7 +838,7 @@ public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableEx
      *
      * 返回值 ImmutableExtensionValue - Extension 封装类
      */
-    public override func immutableValue(): ImmutableExtensionValue
+    public override func asNumberValue(): ImmutableExtensionValue
 
     /**
      * 获取 Extension 封装类
@@ -975,20 +846,6 @@ public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableEx
      * 返回值 ImmutableExtensionValue - Extension 封装类
      */
     public override func asExtensionValue(): ImmutableExtensionValue
-
-    /**
-     * 获取 类型
-     *
-     * 返回值 Byte - 类型
-     */
-    public override func getType(): Byte
-
-    /**
-     * 获取 data数据
-     *
-     * 返回值 Array<Byte> - 数据
-     */
-    public override func getData(): Array<Byte>
 
     /**
      * 写入 数据
@@ -1030,7 +887,7 @@ public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableEx
 
 
 
-##### 1.4.2.6 ImmutableStringValueImpl
+##### 1.4.2.5 ImmutableStringValueImpl
 
 ````cangjie
 public class ImmutableStringValueImpl <: AbstractImmutableValue & ImmutableStringValue & Hashable & ToString{
@@ -1062,14 +919,7 @@ public class ImmutableStringValueImpl <: AbstractImmutableValue & ImmutableStrin
      * 返回值 ImmutableStringValue - String 封装类
      */
     public override func asStringValue(): ImmutableStringValue
-
-    /**
-     * 获取 String 值
-     *
-     * 返回值 String - String 值
-     */
-    public override func getString(): String
-
+    
     /**
      * 写入 String 值
      *
@@ -1108,9 +958,7 @@ public class ImmutableStringValueImpl <: AbstractImmutableValue & ImmutableStrin
 }
 ````
 
-
-
-##### 1.4.2.7 ImmutableTimestampValueImpl
+##### 1.4.2.6 ImmutableTimestampValueImpl
 
 ````cangjie
 public class ImmutableTimestampValueImpl <: AbstractImmutableValue & ImmutableExtensionValue & Hashable & ToString{
@@ -1123,32 +971,11 @@ public class ImmutableTimestampValueImpl <: AbstractImmutableValue & ImmutableEx
     public init(dateTime: DateTime): Unit
 
     /**
-     * 确认是时间戳封装类 - true
-     *
-     * 返回值 Bool - true
-     */
-    public override func isTimestampValue(): Bool
-
-    /**
-     * 获取时间戳类型 - 255
-     *
-     * 返回值 Byte - 类型
-     */
-    public override func getType(): Byte
-
-    /**
      * 值类型
      *
      * 返回值 ValueType - ValueType.EXT_TIMESTAMP
      */
     public override func getValueType(): ValueType
-
-    /**
-     * 获取 Timestamp 封装类
-     *
-     * 返回值 ImmutableTimestampValue - Timestamp 封装类
-     */
-    public override func immutableValue(): ImmutableTimestampValue
 
     /**
      * 获取 Timestamp 封装类
@@ -1163,34 +990,6 @@ public class ImmutableTimestampValueImpl <: AbstractImmutableValue & ImmutableEx
      * 返回值 ImmutableTimestampValue - Timestamp 封装类
      */
     public override func asTimestampValue(): ImmutableTimestampValue
-
-    /**
-     * 获取 具体时间戳的值 - 秒
-     *
-     * 返回值 Int64 - 具体时间戳的值
-     */
-    public override func getEpochSecond(): Int64
-
-    /**
-     * 获取 具体时间戳的值 - 纳秒
-     *
-     * 返回值 Int64 - 具体时间戳的值
-     */
-    public override func getNano(): Int64
-
-    /**
-     * 获取 data - 接口必须实现 无具体意义
-     *
-     * 返回值 Array<Byte> - []
-     */
-    public override func getData(): Array<Byte>
-
-    /**
-     * 获取 时间戳的值
-     *
-     * 返回值 DateTime - 时间戳的值
-     */
-    public override func toDataTime(): DateTime
 
     /**
      * 写入时间戳
@@ -1232,7 +1031,7 @@ public class ImmutableTimestampValueImpl <: AbstractImmutableValue & ImmutableEx
 
 
 
-##### 1.4.2.8 ImmutableArrayValueImpl
+##### 1.4.2.7 ImmutableArrayValueImpl
 
 ````cangjie
 public class ImmutableArrayValueImpl <: AbstractImmutableValue & ImmutableArrayValue & Hashable & ToString {
@@ -1243,13 +1042,6 @@ public class ImmutableArrayValueImpl <: AbstractImmutableValue & ImmutableArrayV
      * 参数 array - Array 值
      */
     public init(array: Array<Value>): Unit
-
-    /**
-     * 获取空数组类 - []
-     *
-     * 返回值 ImmutableArrayValue - 空数组类
-     */
-    public static func empty(): ImmutableArrayValue
 
     /**
      * 值类型
@@ -1271,35 +1063,6 @@ public class ImmutableArrayValueImpl <: AbstractImmutableValue & ImmutableArrayV
      * 返回值 ImmutableArrayValue - Array 封装类
      */
     public override func asArrayValue(): ImmutableArrayValue
-
-    /**
-     * 获取 Array的大小
-     *
-     * 返回值 Int64 - Array的大小
-     */
-    public override func size(): Int64
-
-    /**
-     * 根据index 获取Array的值
-     *
-     * 参数 idnex - Array的idnex
-     * 返回值 ?Value - Array的值
-     */
-    public override func get(index: Int64): ?Value
-
-    /**
-     * 根据Array的迭代器
-     *
-     * 返回值 Iterator<Value> - 迭代器
-     */
-    public override func iterator(): Iterator<Value>
-
-    /**
-     * 转成 ArrayList
-     *
-     * 返回值 List<Value> - ArrayList
-     */
-    public override func list(): List<Value>
 
     /**
      * 写入 Array
@@ -1339,7 +1102,7 @@ public class ImmutableArrayValueImpl <: AbstractImmutableValue & ImmutableArrayV
 }
 ````
 
-##### 1.4.2.9 ImmutableMapValueImpl
+##### 1.4.2.8 ImmutableMapValueImpl
 
 ````cangjie
 public class ImmutableMapValueImpl <: AbstractImmutableValue & ImmutableMapValue & Hashable & ToString {
@@ -1350,13 +1113,6 @@ public class ImmutableMapValueImpl <: AbstractImmutableValue & ImmutableMapValue
      * 参数 kvs - Array 值
      */
     public init(kvs: Array<Value>): Unit
-
-    /**
-     * 获取空Map类
-     *
-     * 返回值 ImmutableMapValue - 空Map类
-     */
-    public static func empty(): ImmutableMapValue
 
     /**
      * 值类型
@@ -1378,13 +1134,6 @@ public class ImmutableMapValueImpl <: AbstractImmutableValue & ImmutableMapValue
      * 返回值 ImmutableMapValue - Map 封装类
      */
     public override func asMapValue(): ImmutableMapValue
-
-    /**
-     * 获取 Map的大小
-     *
-     * 返回值 Int64 - Map的大小
-     */
-    public override func size(): Int64
 
     /**
      * 写入 Map
