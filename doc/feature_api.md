@@ -796,35 +796,7 @@ public class ImmutableInt64ValueImpl <: AbstractImmutableValue & ImmutableIntVal
      * 返回值 Bool - Bool 值
      */
     public override func isInInt64Range(): Bool
-    
-    /**
-     * 获取 Int8 值
-     *
-     * 返回值 Int8 - Int8 值
-     */
-     public override func asInt8(): Int8
 
-    /**
-     * 获取 Int16 值
-     *
-     * 返回值 Int16 - Int16 值
-     */
-     public override func asInt16(): Int16
-    
-    /**
-     * 获取 Int32 值
-     *
-     * 返回值 Int32 - Int32 值
-     */
-     public override func asInt32(): Int32
-    
-    /**
-     * 获取 Int64 值
-     *
-     * 返回值 Int64 - Int64 值
-     */
-     public override func asInt64(): Int64
-    
     /**
      * 写入 Int64 类型的值
      *
@@ -882,20 +854,6 @@ public class ImmutableFloat64ValueImpl <: AbstractImmutableValue & ImmutableIntV
      * 返回值 ValueType - ValueType.FLOAT
      */
     public override func getValueType(): ValueType
-
-    /**
-     * 获取 Float64 封装类
-     *
-     * 返回值 ImmutableIntValue - Float64 封装类
-     */
-    public override func immutableValue(): ImmutableFloat64ValueImpl
-
-    /**
-     * 获取 Number 封装类
-     *
-     * 返回值 ImmutableNumberValue - Number 封装类
-     */
-    public override func asNumberValue(): ImmutableNumberValue
 
     /**
      * 获取 Float64 封装类
