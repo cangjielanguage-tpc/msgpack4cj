@@ -474,7 +474,15 @@ public class ValueFactory {
      * 返回值 ImmutableIntValue - 不可变Int32封装类
      */
     public static func newInt(v: Int32): ImmutableIntValue
-    
+
+    /**
+     * 构建Int64封装类
+     *
+     * 参数 value - Int64
+     * 返回值 ImmutableIntValue - 不可变Int64封装类
+     */
+    public static func newInt(v: Int64): ImmutableIntValue
+
     /**
      * 构建Float32封装类
      *
