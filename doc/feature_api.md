@@ -838,7 +838,7 @@ public class ImmutableExtensionValueImpl <: AbstractImmutableValue & ImmutableEx
      *
      * 返回值 ImmutableExtensionValue - Extension 封装类
      */
-    public override func asNumberValue(): ImmutableExtensionValue
+    public override func immutableValue(): ImmutableExtensionValue
 
     /**
      * 获取 Extension 封装类
