@@ -75,23 +75,23 @@ internal import stdx.serialization.serialization.*
 
 main(): Unit {
     //序列化
-    let packer = MessagePacker()
+    let packer = MessagePack.newDefaultBufferPacker()
     packer.packMapHeader(3)
     packer.packString("name")
     packer.packString("yesokim")
     packer.packString("age")
-    packer.packInt(22)
+    packer.packInt64(22)
     packer.packString("hobby")
     packer.packArrayHeader(1)
     packer.packString("code")
     let data = packer.toByteArray()
     //反序列化
-    let unpacker = MessageUnpacker(data)
+    let unpacker = MessagePack.newDefaultUnpacker(data)
     let mapSize = unpacker.unpackMapHeader()
     let key1 = unpacker.unpackString()
     let name = unpacker.unpackString()
     let key2 = unpacker.unpackString()
-    let age = unpacker.unpackInt()
+    let age = unpacker.unpackInt64()
     let key3= unpacker.unpackString()
     let arraySize = unpacker.unpackArrayHeader()
     let hobby = unpacker.unpackString()
@@ -157,7 +157,7 @@ public class Student <: Serializable<Student> {
 
 在下述版本验证通过：
 
-    Cangjie Version: 1.0.3
+    Cangjie Support Plugin 5.1.1.840
 
 ## 开源协议
 本项目基于 [Apache License 2.0](./LICENSE)，请自由的享受和参与开源。
