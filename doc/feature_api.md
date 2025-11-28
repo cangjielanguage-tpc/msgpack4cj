@@ -185,14 +185,6 @@ public class MessagePacker {
     public func packFloat32(value: Float32): MessagePacker
 
     /**
-     * 序列化Float64类型数据
-     *
-     * 参数 value - Float64 数据
-     * 返回值 MessagePacker - MessagePacker 对象
-     */
-    public func packFloat64(value: Float64): MessagePacker
-
-    /**
      * 序列化Null类型数据
      * 返回值 MessagePacker - MessagePacker 对象
      */
