@@ -1172,5 +1172,21 @@ public class ImmutableMapValueImpl <: AbstractImmutableValue & ImmutableMapValue
     public func toString(): String
 }
 ````
+##### 1.4.2.9 ValueType
+
+````cangjie
+public enum ValueType {
+    | NONE
+    | BOOL
+    | INT
+    | FLOAT
+    | STRING
+    | BYTE
+    | ARRAY
+    | MAP
+    | EXTENSION
+}
+
+````
 
 ####
