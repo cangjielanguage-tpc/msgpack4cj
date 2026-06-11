@@ -1,4 +1,4 @@
-// EXEC: cjc %import-path %L %l %f --test
+// EXEC: cjc %import-path %L %l %f --test --dy-std
 // EXEC: ./main
 
 import std.unittest.*
