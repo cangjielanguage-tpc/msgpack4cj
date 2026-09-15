@@ -1,0 +1,239 @@
+# 1.4.1
+
+1. deveco版本从5.1.1升级到6.1.1
+
+# 1.4.0
+
+1. 重构markdown样式接口
+2. 新增AudioTheme
+3. 新增BannerTheme
+4. 新增BlockQuoteTheme
+5. 新增BoldTheme
+6. 新增BulletListTheme
+7. 新增CodeBlockTheme
+8. 新增DefinitionListTheme
+9. 新增DividerTheme
+10. 新增FootnoteDefTheme
+11. 新增FootnoteRefTheme
+12. 新增GlobalTheme
+13. 新增HeadingTheme
+14. 新增HtmlUnderlineTheme
+15. 新增ImageTheme
+16. 新增InlineCodeTheme
+17. 新增ItalicTheme
+18. 新增LatexMathTheme
+19. 新增LinkTheme
+20. 新增OrderedListTheme
+21. 新增ParagraphTheme
+22. 新增StrikethroughTheme
+23. 新增SubTheme
+24. 新增SupTheme
+25. 新增TableTheme
+26. 新增VideoTheme
+27. MarkdownTheme 中的接口 setLinkBackGroupColor(linkBackGroupColor: Color): MarkdownThemeBuilder 替换成 setLinkBackgroundColor(linkBackgroundColor: Color): MarkdownThemeBuilder
+28. MarkdownTheme 中的接口 setLinkCircleImageBackGroupColor(linkCircleImageBackGroupColor: Color): MarkdownThemeBuilder 替换成 setLinkCircleImageBackgroundColor(linkCircleImageBackgroundColor: Color): MarkdownThemeBuilder
+29. MarkdownTheme 中的接口 setLinkCircleImageButtonBackGroupColor(linkCircleImageButtonBackGroupColor: Color): MarkdownThemeBuilder 替换成 setLinkCircleImageButtonBackgroundColor(linkCircleImageButtonBackgroundColor: Color): MarkdownThemeBuilder
+30. MarkdownTheme 中的接口 setLinkRectImageBackGroupColor(linkRectImageBackGroupColor: Color): MarkdownThemeBuilder 替换成 setLinkRectImageBackgroundColor(linkRectImageBackgroundColor: Color): MarkdownThemeBuilder
+31. MarkdownTheme 中的接口 setLinkRectImageButtonBackGroupColor(linkRectImageButtonBackGroupColor: Color): MarkdownThemeBuilder 替换成 setLinkRectImageButtonBackgroundColor(linkRectImageButtonBackgroundColor: Color): MarkdownThemeBuilder
+32. MarkdownTheme 中的接口 setLinkRectToolImageBackGroupColor(linkRectToolImageBackGroupColor: Color): MarkdownThemeBuilder 替换成 setLinkRectToolImageBackgroundColor(linkRectToolImageBackgroundColor: Color): MarkdownThemeBuilder
+33. MarkdownTheme 中的接口 setLinkRectToolImageButtonBackGroupColor(linkRectToolImageButtonBackGroupColor: Color): MarkdownThemeBuilder 替换成 setLinkRectToolImageButtonBackgroundColor(linkRectToolImageButtonBackgroundColor: Color): MarkdownThemeBuilder
+34. MarkdownTheme 中的接口 setBlockQuoteBackGroupColor(blockQuoteBackGroupColor: Color): MarkdownThemeBuilder 替换成 setBlockQuoteBackgroundColor(blockQuoteBackgroundColor: Color): MarkdownThemeBuilder
+35. MarkdownTheme 中的接口 setCodeListTitleSelectBackGroupColor(codeListTitleSelectBackGroupColor: Color): MarkdownThemeBuilder 替换成 setCodeListTitleSelectBackgroundColor(codeListTitleSelectBackgroundColor: Color): MarkdownThemeBuilder
+36. MarkdownTheme 中的接口 setCodeListTitleUnSelectBackGroupColor(codeListTitleUnSelectBackGroupColor: Color): MarkdownThemeBuilder 替换成 setCodeListTitleUnSelectBackgroundColor(codeListTitleUnSelectBackgroundColor: Color): MarkdownThemeBuilder
+37. MarkdownTheme 中的接口 setLatexMathBackGroupColor(latexMathBackGroupColor: Color): MarkdownThemeBuilder 替换成 setLatexMathBackgroundColor(latexMathBackgroundColor: Color): MarkdownThemeBuilder
+38. MarkdownTheme 中的接口 setVideoReleaseTexColor(videoReleaseTexColor: Color): MarkdownThemeBuilder 替换成 setVideoReleaseTextColor(videoReleaseTextColor: Color): MarkdownThemeBuilder
+39. MarkdownTheme 中的接口 setVideoDownloadTexColor(videoDownloadTexColor: Color): MarkdownThemeBuilder 替换成 setVideoDownloadTextColor(videoDownloadTextColor: Color): MarkdownThemeBuilder
+40. MarkdownTheme 中的接口 setImageDownloadTexColor(imageDownloadTexColor: Color): MarkdownThemeBuilder 替换成 setImageDownloadTextColor(imageDownloadTextColor: Color): MarkdownThemeBuilder
+41. MarkdownTheme 中的接口 setVideoReleaseTexSize(videoReleaseTexSize: Float64): MarkdownThemeBuilder 替换成 setVideoReleaseTextSize(videoReleaseTextSize: Float64): MarkdownThemeBuilder
+42. MarkdownTheme 中的接口 setVideoDownloadTexSize(videoDownloadTexSize: Float64): MarkdownThemeBuilder 替换成 setVideoDownloadTextSize(videoDownloadTextSize: Float64): MarkdownThemeBuilder
+43. MarkdownTheme 中的接口 setImageDownloadTexSize(imageDownloadTexSize: Float64): MarkdownThemeBuilder 替换成 setImageDownloadTextSize(imageDownloadTextSize: Float64): MarkdownThemeBuilder
+
+# 1.3.3
+
+1. 新增代码块格式化配置选项，包括是否启用制表符和设置默认缩进空格数量接口
+2. 新增markdown是否允许整体滚动接口
+3. 修复全量切换markdown文本显示异常
+4. 修复表格图片显示异常
+5. 修复图片替换接口替换之后的图片宽高显示异常
+
+# 1.3.2
+
+1. 优化数据结构
+2. 新增增量解析
+3. 懒加载优化
+4. 新增markdown列表控制器
+5. 修复HTML不支持标签过滤
+6. 支持传递ArkUI卡片布局
+7. 支持自定义正则实现自定义自动连接
+8. 新增图片下载按钮功能
+9. 新增视频下载按钮和发布按钮功能
+10. 新增图片最大高度设置接口
+11. 新增图片最大宽度设置接口
+12. 新增图片边框宽度和边框颜色设置接口
+13. 新增表格标题文本颜色设置接口
+14. 新增表格标题文本大小设置接口
+15. 新增表格内容文本颜色设置接口
+16. 新增表格内容文本大小设置接口
+17. 新增表格滚动条显示隐藏和滚动条颜色设置
+18. 新增表格标题文本行高设置
+19. 新增表格内容文本行高设置接口
+20. 新增标题H1-H6文本大小设置接口
+21. 新增标题H1-H6文本颜色设置接口
+22. 新增标题H1-H2下划线颜色设置接口
+23. 新增链接行高设置接口
+24. 新增下划线和删除线样式设置接口
+25. 删除设置内联代码是否是图片显示接口
+26. 删除设置图片格式内联代码文本左右边距接口
+27. 删除设置图片格式内联代码文本高度接口
+28. 上下文接口修改：setAbilityContext(abilityContext: AbilityContext) 接口修改成 setUIAbilityContext(uiAbilityContext: UIAbilityContext)
+
+# 1.3.1
+
+1. deveco版本从5.0升级到5.1
+2. 仓颉sdk版本从53.18升级到1.0.0
+3. 新增HTML语法Span标签
+4. 新增HTML语法注释/DOCTYPE标签
+5. 新增表格语法嵌套图片语法
+6. 新增链接语法嵌套图片语法
+7. 新增内联代码/链接背景色设置
+8. 新增设置单独代码块是否居底显示接口
+9. 新增有序/无序/任务列表前缀左右边距设置接口
+10. 新增设置数学公式字体路径接口
+11. 新增图片预处理接口
+12. 新增音视频语法自定义渲染
+13. 新增广告语法自定义解析渲染
+14. 删除isFull入参
+15. 修复数学公式图片/链接图片设置透明背景色失效
+16. 修复分割高度为0显示异常
+17. 修复标题中音视频显示异常
+18. 修复单独代码块错误场景显示异常
+19. 修复单独代码块流式输入闪屏
+20. 修复数学公式解析异常不显示，修改为红色文本提示
+21. 新增删除线颜色设置接口
+22. 新增无序列表是否全部设置为实心圆形接口
+23. 新增长按复制功能和长按复制是否打开接口
+24. 新增图片圆角设置接口
+25. 新增不图文混排插件
+26. 添加toc功能
+27. 添加代码块列表功能
+28. 添加图片banner功能
+29. 新增全量markdown普通文本接口
+30. 新增图片占位图功能
+31. 新增支持定义列表语法
+32. 新增支持标题ID语法
+33. 新增标题模块上间距和下间距接口
+34. 新增段落模块上间距和下间距接口
+35. 新增图片缩放类型接口
+36. 新增定义列表定义行间距接口
+37. 新增数学公式未加载状态是否显示文字接口
+38. 新增代码块右边距接口
+39. 新增代码块格式化接口
+40. 列表和块引用支持嵌套脚注语法
+41. 列表和块引用支持嵌套分割线语法
+42. 新增markdown整体模块上下边距接口
+43. 新增支持emoji语法
+44. 新增支持上标语法
+45. 新增支持下标语法
+46. 新增支持html语法中的上标标签、下标标签、下划线标签
+47. 新增支持markdown解析同步异步接口
+48. 新增支持代码块高亮解析同步异步接口
+
+# 1.1.5
+
+1. 修复偶现数组越界
+2. 修复标题中包含音频视频闪退
+3. 兼容性适配
+
+# 1.1.4
+
+1. 兼容性适配
+2. 删除设置图片边距接口
+3. 删除设置数学公式文本行距接口
+4. 删除设置空心圆角矩形图片格式链接文字颜色接口
+5. 删除设置空心圆角矩形图片格式链接控件分割线颜色接口
+6. 删除设置空心圆角矩形图片格式链接控件边框颜色接口
+7. 修改readme文档
+8. 修改api接口文档
+
+# 1.1.3
+
+1. 新增有序列表前缀是否加粗接口
+2. 新增块引用前缀左右边距设置接口，有序无序任务列表前缀左右边距设置接口
+3. 新增分割线额外上下边距设置接口
+4. 新增表格第一列文本是否加粗接口
+5. 新增代码块中代码复制和代码全屏文本是否显示接口
+6. 新增代码块中代码类型文本颜色设置接口
+7. 新增代码块中行号是否显示接口
+8. 新增代码块中代码类型默认文本设置接口
+9. 新增代码块中代码类型和代码内容间距设置接口
+10. 新增内联代码背景色设置接口（内联代码文本用图片显示）
+11. 新增块级别的数学公式是否居中显示接口
+12. 新增数学公式字体路径设置接口
+13. 新增是否按照链接文本字体大小显示文本接口
+14. 接口命名优化
+15. 添加 homepage 和 keywords
+16. 新增单独代码块语法
+17. 新增音频语法
+18. 新增视频语法
+
+# 1.1.2
+
+1. 新增Toc语法、图片幻灯片语法、组合代码语法、图片Style语法
+2. 修复增量加载页面数据显示错误问题
+3. 修复表格宽度错误和表格消失问题
+4. 图片化插件分解
+5. 修复块引用文本显示不全问题
+6. 新增列表子模块间距设置接口
+7. 新增适配真机和模拟器
+8. 删除library模块，合并到markdown模块
+9. 新增段落文本字体样式设置
+
+# 1.1.1
+
+1. 修复数学公式和段落文字不对齐
+
+# 1.1.0
+
+1. 去除Toc语法、视频播放语法、图片幻灯片语法、组合代码语法、图片Style语法
+2. 新增增量加载功能
+3. 新增脚注语法
+4. 新增代码块行号功能
+5. 新增深浅色设置功能
+6. 新增链接图片化和样式设置
+
+# 1.0.0
+
+1. 新增部分HTML语法
+2. 新增自动网址链接语法
+3. 适配 5.0.9.300 版本
+
+# 0.0.1
+
+1. 支持标题语法展示
+2. 支持段落语法展示
+3. 支持分割线语法展示
+4. 支持内联代码语法显示
+5. 支持缩进代码块显示
+6. 支持围栏代码块显示
+7. 支持图片语法显示
+8. 支持加粗语法
+9. 支持斜体语法
+10. 支持删除线语法
+11. 支持链接语法
+12. 支持围栏代码语法高亮显示
+13. 支持内联html\<br>语法显示
+14. 支持软换行和硬换行语法显示
+15. 支持表格语法显示
+16. 支持有序列表语法显示
+17. 支持无序列表显示
+18. 支持任务列表显示
+19. 支持块引用语法显示
+20. 支持列表中嵌套其他元素显示
+21. 支持Toc目录显示扩展功能
+22. 支持视频播放扩展功能
+23. 支持图片幻灯片扩展功能
+24. 支持组合代码模式扩展功能
+25. 支持数学公式展示的功能扩展
+26. 支持markdown文本样式设置功能
+27. 支持表格样式设置功能
+28. 支持代码语法高亮样式设置功能
