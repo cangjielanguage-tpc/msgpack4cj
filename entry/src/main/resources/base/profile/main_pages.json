@@ -1,6 +1,7 @@
 {
   "src": [
     "pages/Index",
-    "pages/test_hlt"
+    "pages/test_hlt",
+    "pages/test_performance"
   ]
 }

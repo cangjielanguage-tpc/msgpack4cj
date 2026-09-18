@@ -22,6 +22,10 @@ export class DataModel {
 export class MessagePacker {
   helper: MessagePackerTs = new MessagePackerTs()
 
+  reset(): void {
+    this.helper.reset()
+  }
+
   packBool(value: boolean): void {
     this.helper.packBool(value)
   }
@@ -91,6 +95,10 @@ export class MessagePacker {
 
 export class MessageUnPacker {
   helper: MessageUnPackerTs
+
+  reset(value: Array<number>): void {
+    this.helper.reset(value)
+  }
 
   unpackBool(): boolean {
     return this.helper.unpackBool();

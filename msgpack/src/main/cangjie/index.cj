@@ -36,6 +36,10 @@ public class MessagePackerTs {
 
     public init(){}
 
+    public func reset(): Unit {
+        this.packer = MessagePack.newDefaultBufferPacker()
+    }
+
     public func packBool(value: Bool): Unit {
         this.packer.packBool(value)
     }
@@ -104,6 +108,10 @@ public class MessageUnPackerTs {
 
     public init(value: JSArrayEx<UInt8>){
         unpacker = MessagePack.newDefaultUnpacker(value.toArray())
+    }
+
+    public func reset(value: JSArrayEx<UInt8>): Unit {
+        this.unpacker = MessagePack.newDefaultUnpacker(value.toArray())
     }
 
     public func unpackBool(): Bool {

@@ -75,6 +75,9 @@ struct Index {
         hilog.error(0, "", this.message2)
       })
       Text(this.message2)
+      Button("性能").fontSize($r('app.float.page_text_font_size')).onClick(n => {
+        router.pushUrl({ url: "pages/test_performance"} )
+      })
       Button("HLT").fontSize($r('app.float.page_text_font_size')).onClick(n => {
         router.pushUrl({ url: "pages/test_hlt"} )
       })

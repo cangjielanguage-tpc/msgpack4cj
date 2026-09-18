@@ -1,4 +1,5 @@
 export declare class MessageUnPackerTs {
+    reset(value: Array<number>): void
     unpackBool(): boolean
     unpackInt8(): number
     unpackInt16(): number
@@ -17,6 +18,7 @@ export declare class MessageUnPackerTs {
 }
 
 export declare class MessagePackerTs {
+    reset(): void
     packBool(value: boolean): void
     packInt8(value: number): void
     packInt16(value: number): void
@@ -40,4 +42,3 @@ export declare class DataModelTs {
     unpackJson(value: Array<number>): string
     constructor ()
 }
-
